@@ -1,9 +1,9 @@
 import React from 'react'
 import {Switch, Route, Redirect} from 'react-router-dom'
-import {CalendarPage} from './pages/CalendarPage'
-import {PersonalInfoPage} from './pages/PersonalInfoPage'
-import {SupportPage} from './pages/SupportPage'
-import {AuthPage} from './pages/AuthPage'
+import {CalendarPage} from './pages/CalendarPage/CalendarPage'
+import {PersonalInfoPage} from './pages/PersonalInfoPage/PersonalInfoPage'
+import {SupportPage} from './pages/SupportPage/SupportPage'
+import {AuthPage} from './pages/AuthPage/AuthPage'
 
 
 export const useRoutes = isAuthenticated => {
@@ -27,7 +27,7 @@ export const useRoutes = isAuthenticated => {
     return (
         <Switch>
             <Route path="/" exact>
-                    <AuthPage />
+                <AuthPage />
             </Route>
             <Redirect to="/" />
         </Switch>

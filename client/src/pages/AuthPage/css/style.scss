@@ -1,0 +1,52 @@
+$hseColor:#005bab;
+$white:#ffffff;
+$black:#000000;
+
+.auth {
+    width: 100%;
+    height: 800px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    
+    .authorization {
+        width: 700px;
+        height: 350px;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-around;
+        align-items: center;
+        border: 2px solid $hseColor;
+
+        &-content {
+            width: 600px;
+
+            .authorization-title {
+                text-align: center;
+                color: $black;
+            } 
+
+            .form-floating-last {
+                margin-bottom: 30px;
+            }
+
+            .btn-sign {
+                display: block;
+                width: 150px;
+                padding: 12px;
+                border-radius: 10px;
+                margin: 0 auto;
+                background-color: $white;
+                border: 1px solid $hseColor;
+                color: $hseColor;
+                font-weight: 700;
+                transition: all .2s linear;
+
+                &:hover {
+                    background-color: $hseColor;
+                    color: $white;
+                }
+            }
+        }
+    }
+}
