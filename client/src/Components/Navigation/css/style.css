@@ -1,0 +1,65 @@
+.nav {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  width: 100%;
+  height: 70px;
+  margin-top: 80px;
+  background-color: #005bab;
+}
+
+.nav-links {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  height: 100%;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  list-style-type: none;
+  margin: 0;
+}
+
+.nav-links-item {
+  height: 100%;
+  width: 250px;
+  border-left: 2px solid #ffffff;
+  -webkit-transition: all .2s linear;
+  transition: all .2s linear;
+}
+
+.nav-links-item:hover {
+  background-color: #ffffff;
+  border-bottom: 1px solid #005bab;
+  border-top: 1px solid #005bab;
+}
+
+.nav-links-item:hover .link {
+  color: #005bab;
+}
+
+.nav-links-item .link {
+  display: block;
+  width: 100%;
+  height: inherit;
+  text-decoration: none;
+  color: #ffffff;
+  line-height: 70px;
+  text-align: center;
+  font-weight: 700;
+  letter-spacing: 1px;
+}
+
+.nav-links-item .link-logout {
+  border-right: 2px solid #ffffff;
+}
+/*# sourceMappingURL=style.css.map */
