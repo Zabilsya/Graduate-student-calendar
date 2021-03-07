@@ -1,0 +1,56 @@
+.calendar-grid {
+  display: -ms-grid;
+  display: grid;
+  -ms-grid-columns: (1fr)[7];
+      grid-template-columns: repeat(7, 1fr);
+  -ms-grid-rows: (1fr)[6];
+      grid-template-rows: repeat(6, 1fr);
+  grid-gap: 1px;
+  background-color: #005bab;
+  border-top: 1px solid #005bab;
+}
+
+.calendar-grid .day {
+  position: relative;
+  min-width: 120px;
+  min-height: 80px;
+  background-color: #ffffff;
+}
+
+.calendar-grid .day .number-wrapper {
+  position: absolute;
+  width: 18%;
+  height: 40%;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  font-weight: 700;
+}
+
+.calendar-grid .day .number-wrapper .not-current {
+  opacity: .4;
+}
+
+.calendar-grid .day .current {
+  background-color: #ff0000;
+}
+
+.calendar-grid-header {
+  display: -ms-grid;
+  display: grid;
+  -ms-grid-columns: (1fr)[7];
+      grid-template-columns: repeat(7, 1fr);
+  margin-top: 10px;
+}
+
+.calendar-grid-header .day-of-week {
+  text-align: center;
+  font-weight: 700;
+}
+/*# sourceMappingURL=style.css.map */

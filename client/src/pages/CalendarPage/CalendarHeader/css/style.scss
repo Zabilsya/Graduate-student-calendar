@@ -1,0 +1,56 @@
+$black: #000000;
+$white: #ffffff;
+
+.calendar-header {
+    display: flex;
+    justify-content: space-between;
+    border-bottom: 2px solid $black;
+
+    .title {
+        font-weight: 700;
+        font-size: 24px;
+    }
+
+    .button-wrapper {
+        width: 200px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+
+        .button {
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            width: 100%;
+            height: 100%;
+            background-color: $black;
+            color: $white;
+            font-size: 15px;
+            border: 1px solid $black;
+            transition: all .1s linear;
+    
+            .arrow {
+                width: 0;
+                height: 0;
+                border: 8px solid transparent;
+            }
+        }
+    
+        .prev {
+            flex-direction: row-reverse;
+    
+            .arrow {
+                border-right: 12px solid $white;
+            }
+        }
+    
+        .next {
+            flex-direction: row;
+    
+            .arrow {
+                border-left: 12px solid $white;
+            }
+        }
+    }
+}

@@ -1,0 +1,48 @@
+$hseColor:#005bab;
+$white:#ffffff;
+$red:#ff0000;
+
+.calendar-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    grid-template-rows: repeat(6, 1fr);
+    grid-gap: 1px;
+    background-color: $hseColor;
+    border-top: 1px solid $hseColor;
+
+    .day {
+        position: relative;
+        min-width: 120px;
+        min-height: 80px;
+        background-color: $white;
+        
+        .number-wrapper {
+            position: absolute;
+            width: 18%;
+            height: 40%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-weight: 700;
+
+            .not-current {
+                opacity: .4;
+            }
+        }
+
+        .current {
+            background-color: $red;
+        }
+    }
+}
+
+.calendar-grid-header {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    margin-top: 10px;
+
+    .day-of-week {
+        text-align: center;
+        font-weight: 700;
+    }
+}

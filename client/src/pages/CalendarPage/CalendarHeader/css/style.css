@@ -1,0 +1,76 @@
+.calendar-header {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: justify;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
+  border-bottom: 2px solid #000000;
+}
+
+.calendar-header .title {
+  font-weight: 700;
+  font-size: 24px;
+}
+
+.calendar-header .button-wrapper {
+  width: 200px;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  cursor: pointer;
+}
+
+.calendar-header .button-wrapper .button {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -ms-flex-pack: distribute;
+      justify-content: space-around;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  width: 100%;
+  height: 100%;
+  background-color: #000000;
+  color: #ffffff;
+  font-size: 15px;
+  border: 1px solid #000000;
+  -webkit-transition: all .1s linear;
+  transition: all .1s linear;
+}
+
+.calendar-header .button-wrapper .button .arrow {
+  width: 0;
+  height: 0;
+  border: 8px solid transparent;
+}
+
+.calendar-header .button-wrapper .prev {
+  -webkit-box-orient: horizontal;
+  -webkit-box-direction: reverse;
+      -ms-flex-direction: row-reverse;
+          flex-direction: row-reverse;
+}
+
+.calendar-header .button-wrapper .prev .arrow {
+  border-right: 12px solid #ffffff;
+}
+
+.calendar-header .button-wrapper .next {
+  -webkit-box-orient: horizontal;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: row;
+          flex-direction: row;
+}
+
+.calendar-header .button-wrapper .next .arrow {
+  border-left: 12px solid #ffffff;
+}
+/*# sourceMappingURL=style.css.map */

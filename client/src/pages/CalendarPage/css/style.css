@@ -1,1 +1,7 @@
-/* No CSS *//*# sourceMappingURL=style.css.map */
+.calendar {
+  width: 1200px;
+  margin: 0 auto;
+  border: 5px solid #005bab;
+  border-radius: 8px;
+}
+/*# sourceMappingURL=style.css.map */
