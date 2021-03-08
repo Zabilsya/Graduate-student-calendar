@@ -8,7 +8,6 @@ export const Navigation = () => {
 
     const logoutHandler = event => {
         event.preventDefault()
-
         history.push('/')
     }
 

@@ -5,7 +5,6 @@ import {PersonalInfoPage} from './pages/PersonalInfoPage/PersonalInfoPage'
 import {SupportPage} from './pages/SupportPage/SupportPage'
 import {AuthPage} from './pages/AuthPage/AuthPage'
 
-
 export const useRoutes = isAuthenticated => {
     if (isAuthenticated) {
         return (

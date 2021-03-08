@@ -1,9 +1,10 @@
-import React from 'react';
+import React, { useState } from 'react';
 import moment from 'moment'
+import {CalendarDay} from './../CalendarDay/CalendarDay'
 
 import './css/style.css'
 
-export const CalendarGrid = ({startDay, today}) => {
+export const CalendarGrid = ({ startDay, today }) => {
     const totalDays = 42
     const day = startDay.clone().subtract(1, 'day')
     const daysArr = [...Array(totalDays)].map(() => day.add(1, 'day').clone())
@@ -20,18 +21,12 @@ export const CalendarGrid = ({startDay, today}) => {
                 ))}
             </div>
             <div className="calendar-grid">
-             {
-                daysArr.map((day) => (
-                    <div className="day" key={day.unix()}>
-                        <div className={isCurrentDay(day) ? "number-wrapper current" : "number-wrapper"}>
-                            <div className={isSelectedMonth(day) ? "number" : "number not-current"}>
-                                {day.format('D')}
-                            </div>
-                        </div>
-                    </div>
-                ))
-            }
-        </div>
+                {
+                    daysArr.map((day) => (
+                        <CalendarDay day={day} isCurrentDay={isCurrentDay} isSelectedMonth={isSelectedMonth}/>
+                    ))
+                }
+            </div>
         </>
     )
 }
