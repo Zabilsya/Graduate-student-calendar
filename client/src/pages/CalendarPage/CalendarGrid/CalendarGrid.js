@@ -15,7 +15,7 @@ export const CalendarGrid = ({ startDay, today }) => {
         <>
             <div className="calendar-grid-header">
                 {[...Array(7)].map((item, index) => (
-                    <div className="day-of-week">
+                    <div className="day-of-week" key={index}>
                         {moment().day(index + 1).format('ddd')}
                     </div>
                 ))}
@@ -23,7 +23,7 @@ export const CalendarGrid = ({ startDay, today }) => {
             <div className="calendar-grid">
                 {
                     daysArr.map((day) => (
-                        <CalendarDay day={day} isCurrentDay={isCurrentDay} isSelectedMonth={isSelectedMonth}/>
+                        <CalendarDay day={day} isCurrentDay={isCurrentDay} isSelectedMonth={isSelectedMonth} key={day}/>
                     ))
                 }
             </div>

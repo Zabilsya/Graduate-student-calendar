@@ -28,7 +28,7 @@
   background: white;
   position: relative;
   margin: 0 20px;
-  max-height: calc(100vh - 40px);
+  max-height: calc(100vh - 350px);
   text-align: left;
   display: -webkit-box;
   display: -ms-flexbox;
@@ -38,6 +38,7 @@
       -ms-flex-direction: column;
           flex-direction: column;
   overflow: hidden;
+  border: 2px solid black;
   -webkit-box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
           box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
   -webkit-animation-name: slide-in;
@@ -53,6 +54,9 @@
   -webkit-box-align: center;
       -ms-flex-align: center;
           align-items: center;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
   padding: 1rem;
 }
 
@@ -62,13 +66,38 @@
 
 .overlay .modal-title {
   font-weight: 700;
-  color: red;
+  color: #005bab;
 }
 
 .overlay .modal-close {
+  width: 32px;
+  height: 32px;
+  opacity: 0.3;
   cursor: pointer;
-  padding: 1rem;
-  margin: -1rem -1rem -1rem auto;
+  -webkit-transition: all .1s linear;
+  transition: all .1s linear;
+}
+
+.overlay .modal-close:hover {
+  opacity: 1;
+}
+
+.overlay .modal-close:before, .overlay .modal-close:after {
+  position: absolute;
+  content: ' ';
+  height: 33px;
+  width: 3px;
+  background-color: #000000;
+}
+
+.overlay .modal-close:before {
+  -webkit-transform: rotate(45deg);
+          transform: rotate(45deg);
+}
+
+.overlay .modal-close:after {
+  -webkit-transform: rotate(-45deg);
+          transform: rotate(-45deg);
 }
 
 .overlay .modal-header {
@@ -80,9 +109,25 @@
 
 .overlay .modal-footer {
   border-top: 1px solid #dbdbdb;
-  -webkit-box-pack: end;
-      -ms-flex-pack: end;
-          justify-content: flex-end;
+}
+
+.overlay .modal-footer-button {
+  display: block;
+  width: 200px;
+  padding: 12px;
+  border-radius: 10px;
+  margin: 0 auto;
+  background-color: #ffffff;
+  border: 1px solid #005bab;
+  color: #005bab;
+  font-weight: 700;
+  -webkit-transition: all .2s linear;
+  transition: all .2s linear;
+}
+
+.overlay .modal-footer-button:hover {
+  background-color: #005bab;
+  color: #ffffff;
 }
 
 @-webkit-keyframes appear {

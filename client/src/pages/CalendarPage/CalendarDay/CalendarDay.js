@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
 import moment from 'moment'
 import {Modal} from './../../../Components/Modal/Modal'
 
@@ -17,7 +17,7 @@ export const CalendarDay = ({day, isCurrentDay, isSelectedMonth}) => {
 
     return (
         <>
-            <div className="day" onClick={openModal} key={day.unix()}>
+            <div className="day" onClick={isSelectedMonth(day) ? openModal : ''} key={day.unix()}>
                 <div className={isCurrentDay(day) ? "number-wrapper current" : "number-wrapper"}>
                     <div className={isSelectedMonth(day) ? "number" : "number not-current"}>
                         {day.format('D')}
