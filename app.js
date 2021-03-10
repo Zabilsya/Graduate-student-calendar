@@ -3,8 +3,10 @@ const config = require('config')
 const mongoose = require('mongoose')
 
 const app = express()
+const server = require('http').Server(app)
+const io = require('socket.io')(server)
 
-app.use('/api/auth', require('./routes/auth.routes'))
+// app.use('/api/auth', require('./routes/auth.routes'))
 
 const PORT = config.get('port') || 5000
 
@@ -16,7 +18,16 @@ async function start() {
             useUnifiedTopology: true,
             useCreateIndex: true
         })
-        app.listen(PORT, () => console.log(`App has been started on port ${PORT}...`))
+
+        server.listen(PORT, () => console.log(`App has been started on port ${PORT}...`))
+        io.sockets.on('connection', socket => {
+            console.log(socket.id)
+            socket.on('mes', mes => {
+                console.log(mes)
+                socket.emit('mes', `${mes} privet client`)
+            })
+        })
+
     }
     catch (e){
         console.log('Server Error', e.message)

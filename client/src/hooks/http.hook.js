@@ -3,21 +3,22 @@ import axios from "axios";
 
 export const useHttp = () => {
     const request = useCallback(async (url, method = 'GET', body = null, headers = {}) => {
+        let response
+        let data = null
         try {
-            if (body) {
-                body = JSON.stringify(body)
-                headers['Content-Type'] = 'application/json'
-            }
+            // console.log(body)
+            // if (body) {
+            //     body = JSON.stringify(body)
+            //     headers['Content-Type'] = 'application/json'
+            // }
 
-            let response
-            let data = null
 
             switch (method) {
                 case 'GET':
                     response = await axios.get(url)
                     break
                 case 'POST':
-                    response = await axios.post(url, { method, body, headers })
+                    response = await axios.post(url, body)
                     break
                 default:
                     throw new Error('Что-то пошло не так')
@@ -31,7 +32,7 @@ export const useHttp = () => {
 
             return data
         } catch (e) {
-            alert('Что-то пошло не так');
+            alert(response.data.message);
         }
     }, [])
 

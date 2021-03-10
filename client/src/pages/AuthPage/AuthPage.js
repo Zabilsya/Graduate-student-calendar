@@ -19,7 +19,7 @@ export const AuthPage = () => {
     const loginHandler = async () => {
         try {
             // const data = await request(`${URLs.baseURL}/auth/login`, 'POST', {...form})
-            auth.login('kaka', 228)
+            auth.login('123', 1)
           } catch (e) {}
     }
 

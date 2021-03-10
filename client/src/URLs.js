@@ -7,8 +7,8 @@ if (process.env.NODE_ENV === "production") {
   };
 } else {
   URLs = {
-    baseURL: "http://localhost:5000/api",
-    socketURL: "http://localhost:5000/api",
+    baseURL: "/api",
+    socketURL: "/api",
   };
 }
 

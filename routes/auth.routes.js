@@ -58,7 +58,8 @@ router.post('/login',
         check('email','Некорректный email').normalizeEmail().isEmail(),
         check('password','Введите пароль').exists()
     ],
-    async (request, response) => {
+    async (req, response) => {
+        console.log(req.body)
         try {
             const errors = validationResult(req)
 
