@@ -6,7 +6,6 @@ import { useAuth } from './hooks/auth.hook'
 import { AuthContext } from './context/AuthContext'
 import { ScheduleContext } from './context/ScheduleContext'
 import { useSchedule } from './hooks/schedule.hook'
-import io from 'socket.io-client'
 
 import './style.css'
 

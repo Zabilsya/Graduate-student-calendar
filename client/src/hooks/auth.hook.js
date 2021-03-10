@@ -33,5 +33,11 @@ export const useAuth = () => {
     }
   }, [login])
 
+  useEffect(() => {
+    if (socket) {
+      socket.emit('enter', userId)
+    }
+  }, [socket, userId])
+
   return {socket, login, logout, token, userId}
 }

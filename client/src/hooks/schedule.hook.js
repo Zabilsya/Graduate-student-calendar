@@ -8,7 +8,7 @@ export const useSchedule = socket => {
       socket.emit('mes', 'darova server')
 
       socket.on('mes', message => {
-        console.log(`mes: ${message}`)
+      
       })
     }
 

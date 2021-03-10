@@ -21,7 +21,11 @@ async function start() {
 
         server.listen(PORT, () => console.log(`App has been started on port ${PORT}...`))
         io.sockets.on('connection', socket => {
-            console.log(socket.id)
+
+            // получаем в response id пользователя
+            socket.on('enter', response => {
+
+            })
             socket.on('mes', mes => {
                 console.log(mes)
                 socket.emit('mes', `${mes} privet client`)
