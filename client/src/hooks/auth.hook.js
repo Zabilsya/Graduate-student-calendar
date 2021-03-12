@@ -6,7 +6,7 @@ const storageName = 'userData'
 export const useAuth = () => {
   const [token, setToken] = useState(null)
   const [userId, setUserId] = useState(null)
-  const [socket, setSocket] = useState(false)
+  const [socket, setSocket] = useState(null)
 
   const login = useCallback((jwtToken, id) => {
     setToken(jwtToken)
@@ -37,7 +37,7 @@ export const useAuth = () => {
     if (socket) {
       socket.emit('enter', userId)
     }
-  }, [socket, userId])
+  }, [socket])
 
   return {socket, login, logout, token, userId}
 }

@@ -5,10 +5,9 @@ export const useSchedule = socket => {
 
   useEffect(() => {
     if (socket) {
-      socket.emit('mes', 'darova server')
 
       socket.on('mes', message => {
-      
+          setEvents(message)
       })
     }
 

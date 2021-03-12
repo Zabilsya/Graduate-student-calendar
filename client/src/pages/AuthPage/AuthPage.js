@@ -1,4 +1,6 @@
+import axios from 'axios';
 import React, {useState, useContext} from 'react'
+import { useRequest } from '../../hooks/request.hook';
 import {AuthContext} from './../../context/AuthContext'
 import URLs from './../../URLs';
 
@@ -9,17 +11,25 @@ export const AuthPage = () => {
     const [form, setForm] = useState({
         email: '', password: ''
     });
-    // const request = useHttp()
 
     const changeInputHandler = event => {
         setForm({ ...form, [event.target.name]: event.target.value })
     }
 
     const loginHandler = async () => {
-        try {
-            // const data = await request(`${URLs.baseURL}/auth/login`, 'POST', {...form})
-            auth.login('123', 1)
-          } catch (e) {}
+        let response = await fetch('/api/auth/login', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(form)
+          })
+        const result = await response.json()
+        if(!response.ok) {
+            console.log(result.message)
+            return
+        }
+        auth.login(result.token, result.userId)
     }
 
     return (

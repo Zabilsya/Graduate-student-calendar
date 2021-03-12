@@ -7,7 +7,6 @@ import { AuthContext } from './context/AuthContext'
 import { ScheduleContext } from './context/ScheduleContext'
 import { useSchedule } from './hooks/schedule.hook'
 
-import './scripts/script'
 import './style.css'
 
 function App() {

@@ -4,11 +4,12 @@ import {CalendarGrid} from './CalendarGrid/CalendarGrid'
 import moment from 'moment'
 import {ScheduleContext} from '../../context/ScheduleContext'
 
+// import './../../scripts/script'
 import './css/style.css'
 
 export const CalendarPage = () => {
     const schedule = useContext(ScheduleContext)
-    let events = schedule.events
+    let events = schedule.schedule
     moment.updateLocale('en', {week: {dow: 1}})
     const [today, setToday] = useState(moment())
     const startDay = today.clone().startOf('month').startOf('week')

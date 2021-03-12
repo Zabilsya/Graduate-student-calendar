@@ -10,19 +10,19 @@ export const PostgraduatesInfoPage = () => {
     const [chosenStudent, setChosenStudent] = useState(false)
     const [isOpenModal, setIsOpenModal] = useState(false)
     const [modalInfo, setModalInfo] = useState({
-        title: '', buttonText: ''
+        data: '', title: '', buttonText: ''
     })
-    const request = useRequest()
+    // const request = useRequest()
 
-    useEffect(() => {
-        const response = request()
-        if (response && response.success) {
-            setStudents(response.message)
-            setChosenStudent(response.message[0])
-        } else if (!response.success) {
-            setStudents('')
-        }
-    }, [])
+    // useEffect(() => {
+    //     const response = request()
+    //     if (response && response.success) {
+    //         setStudents(response.message)
+    //         setChosenStudent(response.message[0])
+    //     } else if (!response.success) {
+    //         setStudents('')
+    //     }
+    // }, [])
 
     const chooseStudent = student => {
         setChosenStudent(student)

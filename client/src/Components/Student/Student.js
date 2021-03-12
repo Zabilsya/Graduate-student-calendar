@@ -37,7 +37,7 @@ export const Student = ({ data, buttonText, onConfirm }) => {
                     <label htmlFor="thirdName">Отчество</label>
                 </div>
                 <div className="form-floating mb-3">
-                    <input type="email" className="form-control" name="email" value={form.email} onChange={changeInputHandler} id="email" placeholder="name@example.com" />
+                    <input type="email" className="form-control" name="email" value={form.email} onChange={changeInputHandler} id="email" />
                     <label htmlFor="email">Электронная почта</label>
                 </div>
                 <div className="form-floating form-floating-last">
@@ -46,7 +46,7 @@ export const Student = ({ data, buttonText, onConfirm }) => {
                 </div>
             </div>
             <div className="modal-footer">
-                <button className="modal-footer-button" onClick={form => onConfirm(form)}>{buttonText}</button>
+                <button className="modal-footer-button" onClick={() => onConfirm(form)}>{buttonText}</button>
             </div>
 
         </>
