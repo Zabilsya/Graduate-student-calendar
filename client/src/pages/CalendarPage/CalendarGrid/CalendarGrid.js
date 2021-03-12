@@ -22,8 +22,8 @@ export const CalendarGrid = ({ startDay, today }) => {
             </div>
             <div className="calendar-grid">
                 {
-                    daysArr.map((day) => (
-                        <CalendarDay day={day} isCurrentDay={isCurrentDay} isSelectedMonth={isSelectedMonth} key={day}/>
+                    daysArr.map((day, index) => (
+                        <CalendarDay day={day} isCurrentDay={isCurrentDay} isSelectedMonth={isSelectedMonth} key={index}/>
                     ))
                 }
             </div>

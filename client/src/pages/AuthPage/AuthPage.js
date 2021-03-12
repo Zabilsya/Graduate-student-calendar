@@ -1,5 +1,4 @@
 import React, {useState, useContext} from 'react'
-import {useHttp} from '../../hooks/http.hook'
 import {AuthContext} from './../../context/AuthContext'
 import URLs from './../../URLs';
 
@@ -10,7 +9,7 @@ export const AuthPage = () => {
     const [form, setForm] = useState({
         email: '', password: ''
     });
-    const request = useHttp()
+    // const request = useHttp()
 
     const changeInputHandler = event => {
         setForm({ ...form, [event.target.name]: event.target.value })

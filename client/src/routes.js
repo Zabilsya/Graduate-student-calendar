@@ -4,6 +4,7 @@ import {CalendarPage} from './pages/CalendarPage/CalendarPage'
 import {PersonalInfoPage} from './pages/PersonalInfoPage/PersonalInfoPage'
 import {SupportPage} from './pages/SupportPage/SupportPage'
 import {AuthPage} from './pages/AuthPage/AuthPage'
+import {PostgraduatesInfoPage} from './pages/PostgraduatesInfoPage/PostgraduatesInfoPage'
 
 export const useRoutes = isAuthenticated => {
     if (isAuthenticated) {
@@ -14,6 +15,9 @@ export const useRoutes = isAuthenticated => {
                 </Route>
                 <Route path="/personalInfo" exact>
                     <PersonalInfoPage />
+                </Route>
+                <Route path="/postgraduatesInfo" exact>
+                    <PostgraduatesInfoPage />
                 </Route>
                 <Route path="/support" exact>
                     <SupportPage />

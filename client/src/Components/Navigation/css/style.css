@@ -34,14 +34,14 @@
   height: 100%;
   width: 250px;
   border-left: 2px solid #ffffff;
+  border-right: 2px solid #ffffff;
   -webkit-transition: all .2s linear;
   transition: all .2s linear;
 }
 
 .nav-links-item:hover {
   background-color: #ffffff;
-  border-bottom: 1px solid #005bab;
-  border-top: 1px solid #005bab;
+  border: 1px solid #005bab;
 }
 
 .nav-links-item:hover .link {
@@ -60,7 +60,20 @@
   letter-spacing: 1px;
 }
 
+.nav-links-item .link-main {
+  border-left: 2px solid #ffffff;
+}
+
 .nav-links-item .link-logout {
   border-right: 2px solid #ffffff;
+}
+
+.nav-links-item-active {
+  background-color: #ffffff;
+  border: 1px solid #005bab;
+}
+
+.nav-links-item-active .link {
+  color: #005bab;
 }
 /*# sourceMappingURL=style.css.map */

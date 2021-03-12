@@ -25,7 +25,7 @@ export const CalendarDay = ({day, isCurrentDay, isSelectedMonth}) => {
                 </div>
             </div>
             {isOpenModal && 
-                <Modal title={day.format('LL')} onClose={closeModal}/>
+                <Modal title={day.format('LL')} onClose={closeModal} type='event'/>
             }
         </>
     )
