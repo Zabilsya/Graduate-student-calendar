@@ -1,6 +1,6 @@
 import React, { useRef, useState } from 'react';
 import moment from 'moment'
-import {Modal} from './../../../Components/Modal/Modal'
+import {Modal} from '../../../Components/ModalStudent/Modal'
 
 import './css/style.css'
 

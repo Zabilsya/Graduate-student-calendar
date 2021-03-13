@@ -1,22 +1,23 @@
 import { useCallback, useContext } from 'react'
-import { io } from 'socket.io-client'
 import { ScheduleContext } from '../context/ScheduleContext'
 
 export const useRequest = () => {
-    const schedule = useContext(ScheduleContext)
-    let socket = schedule.socket
+    const context = useContext(ScheduleContext)
+    const socket = context.socket
 
-    const request = (type, info = null) => {
-        return new Promise((resolve, reject) => {
-            socket.emit(type, info)
-
-        function responseHandler(message) {
-            resolve(message)
-            socket.removeListener(type, responseHandler)
-        }
-
-        socket.once(type, responseHandler);
-        }) 
+    const request = async (type, info = null) => {
+        socket.emit(type, info)
+        await new Promise(resolve => {
+            // console.log('дождались')
+            socket.on(type, response => {
+                resolve(response)
+            })
+        })
+        .then(response => {
+            socket.removeAllListeners(type)
+            if (typeof response !== String) return response
+            console.log(response)
+        })
     }
 
     return request

@@ -2,17 +2,18 @@ import React, { useEffect, useState } from 'react'
 
 export const Student = ({ data, buttonText, onConfirm }) => {
     const [form, setForm] = useState({
-        name: '', secondName: '', thirdName: '', email: '', year: ''
+        _id: '', name: '', secondName: '', thirdName: '', email: '', admissionYear: ''
     })
 
     useEffect(() => {
         if (data) {
             setForm({
+                _id : data._id,
                 name: data.name,
                 secondName: data.secondName,
                 thirdName: data.thirdName,
                 email: data.email,
-                year: data.year
+                admissionYear: data.admissionYear
             })
         }
     }, [])
@@ -41,8 +42,8 @@ export const Student = ({ data, buttonText, onConfirm }) => {
                     <label htmlFor="email">Электронная почта</label>
                 </div>
                 <div className="form-floating form-floating-last">
-                    <input type="number" className="form-control" name="year" value={form.year} onChange={changeInputHandler} id="year" />
-                    <label htmlFor="year">Год поступления</label>
+                    <input type="number" className="form-control" name="admissionYear" value={form.admissionYear} onChange={changeInputHandler} id="admissionYear" />
+                    <label htmlFor="admissionYear">Год поступления</label>
                 </div>
             </div>
             <div className="modal-footer">

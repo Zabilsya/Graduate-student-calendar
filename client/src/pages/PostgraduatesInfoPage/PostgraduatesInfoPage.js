@@ -1,12 +1,13 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useContext } from 'react'
 import { useRequest } from './../../hooks/request.hook'
 import { PostgraduatesTable } from './PostgraduatesTable/PostgraduatesTable'
-import {Modal} from './../../Components/Modal/Modal'
+import { Modal } from '../../Components/ModalStudent/ModalStudent'
 
 import './css/style.css'
+import { useStudents } from '../../hooks/students.hook'
 
 export const PostgraduatesInfoPage = () => {
-    const [students, setStudents] = useState(false)
+    const students = useStudents()
     const [chosenStudent, setChosenStudent] = useState(false)
     const [isOpenModal, setIsOpenModal] = useState(false)
     const [modalInfo, setModalInfo] = useState({
@@ -42,6 +43,13 @@ export const PostgraduatesInfoPage = () => {
         setIsOpenModal(true)
     }
 
+    const deleteStudent = () => {
+        setModalInfo({
+            data: chosenStudent, title: 'Удаление аспиранта', buttonText: 'Удалить'
+        })
+        setIsOpenModal(true)
+    }
+
     const closeModal = () => {
         setIsOpenModal(false)
     }
@@ -52,9 +60,9 @@ export const PostgraduatesInfoPage = () => {
                 <PostgraduatesTable students={students} chooseStudent={chooseStudent}/>
             </div>
             <div>
-                <button type="button" onClick={editStudent}>Редактировать информацию об аспиранте</button>
+                <button type="button" id="" onClick={editStudent}>Редактировать информацию об аспиранте</button>
                 <button type="button" onClick={addStudent}>Добавить аспиранта</button>
-                <button type="button">Удалить аспиранта</button>
+                <button type="button"onClick={deleteStudent}>Удалить аспиранта</button>
             </div>
             {isOpenModal && 
                 <Modal modalInfo={modalInfo} onClose={closeModal} type='student'/>

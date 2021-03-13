@@ -14,7 +14,7 @@ function App() {
   const isAuthenticated = !!token
 
   const schedule = useSchedule(socket)
-  const routes = useRoutes(isAuthenticated)
+  const routes = useRoutes(isAuthenticated, userId)
 
   return (
     <AuthContext.Provider value={{
@@ -22,7 +22,7 @@ function App() {
     }}>
       <ScheduleContext.Provider value={{socket, schedule}}>
         <BrowserRouter>
-          {isAuthenticated && <Navigation />}
+          {isAuthenticated && <Navigation userId={userId} />}
           <div className="container">
             {routes}
           </div>

@@ -1,12 +1,11 @@
 import React, { useEffect, useState } from 'react'
 import ReactDOM from 'react-dom';
 import { useRequest } from '../../hooks/request.hook';
-import { Event } from './../Event/Event'
-import { Student } from './../Student/Student'
+import { Event } from '../Event/Event'
 
 import './css/style.css'
 
-export const Modal = ({ modalInfo, type, onClose }) => {
+export const ModalEvents = ({ modalInfo, onClose }) => {
     const [isEditing, setIsEditing] = useState(false)
     const { data, title, buttonText } = modalInfo
     const request = useRequest()
@@ -15,26 +14,20 @@ export const Modal = ({ modalInfo, type, onClose }) => {
         setIsEditing(true)
     }
 
-    const onConfirmChanges = form => {
-        let response
+    const onConfirmChanges = async form => {
         switch (buttonText) {
             case 'Добавить':
-                response = request('addUser', form)
+                await request('addUser', form)
                 break
             case 'Сохранить':
-                response = request('editUser', form)
+                await request('editUser', form)
                 break
             case 'Удалить':
-                response = request('deleteUser', form)
+                await request('deleteUser', form)
                 break
             default: break
         }
-        response.then(message => {
-            console.log(message)
-            onClose()
-        })
-        
-        // отправка на сервер
+           onClose()
     }
 
     return (
