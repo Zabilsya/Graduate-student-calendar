@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom';
 import { useRequest } from '../../hooks/request.hook';
 import { Event } from '../Event/Event'
 
-import './css/style.css'
+// import './css/style.css'
 
 export const ModalEvents = ({ modalInfo, onClose }) => {
     const [isEditing, setIsEditing] = useState(false)
@@ -38,12 +38,12 @@ export const ModalEvents = ({ modalInfo, onClose }) => {
                         <h2 className="modal-title">{title}</h2>
                         <div className="modal-close" onClick={onClose}></div>
                     </div>
-                    {type === 'student' ?
-                        <Student data={data} buttonText={buttonText} onConfirm={onConfirmChanges} />
+                    {/* {
+                        
                         : isEditing ?
                             <Event />
                             : ''
-                    }
+                    } */}
                 </div>
             </div>,
             document.getElementById('modal')

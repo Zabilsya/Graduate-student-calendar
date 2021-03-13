@@ -1,6 +1,7 @@
 const express = require('express')
 const config = require('config')
 const mongoose = require('mongoose')
+const Admin = mongoose.mongo.Admin
 const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
 
@@ -16,43 +17,36 @@ app.use('/api/auth', require('./routes/auth.routes'))
 const PORT = config.get('port') || 5000
 
 const User = require('./models/User')
-const {
-    db
-} = require('./models/User')
 
 // Создать БД и реализовать подключение к ней
 async function start() {
     try {
         server.listen(PORT, () => console.log(`App has been started on port ${PORT}...`))
-        await mongoose.createConnection(config.get('mongoUri'), {
+        mongoose.connect(config.get('mongoUri'), {
             useNewUrlParser: true,
             useUnifiedTopology: true,
             useCreateIndex: true
         })
-        console.log('Подключение успешно!')
+       
         const userChangeStream = User.watch();
         io.sockets.on('connection', socket => {
 
-
-
             //#region subscribeToChanges
-            userChangeStream.on("change", (change) => {
-                let user;
+            userChangeStream.on("change", async (change) => {
 
                 switch (change.operationType) {
                     case "insert":
 
-                        user = {
+                        const newUser = {
                             _id: change.fullDocument._id,
                             email: change.fullDocument.email,
                             name: change.fullDocument.name,
                             secondName: change.fullDocument.secondName,
                             thirdName: change.fullDocument.thirdName,
                             admissionYear: change.fullDocument.admissionYear,
-                            password: change.fullDocument.password
                         }
 
-                        socket.emit("newUser", user);
+                        socket.emit("newUser", newUser);
                         break;
 
                     case "delete":
@@ -60,24 +54,27 @@ async function start() {
                         break;
 
                     case "update":
+                        
+                        const respone = await User.findOne({
+                            "_id": change.documentKey._id
+                        })
 
-                        user = {
-                            _id: change.fullDocument._id,
-                            email: change.fullDocument.email,
-                            name: change.fullDocument.name,
-                            secondName: change.fullDocument.secondName,
-                            thirdName: change.fullDocument.thirdName,
-                            admissionYear: change.fullDocument.admissionYear,
-                            password: change.fullDocument.password
+                        const updatedUser = {
+                            _id: respone._id,
+                            email: respone.email,
+                            name: respone.name,
+                            secondName: respone.secondName,
+                            thirdName: respone.thirdName,
+                            admissionYear: respone.admissionYear,
                         }
-
-                        socket.emit("updatedUser", user)
+                       
+                        socket.emit("updatedUser", updatedUser)
                         break;
 
                 }
             })
             //#endregion
-
+            
             ///#region addEditDeleteUser
             socket.on('addUser', async (newUser) => {
                 try {
@@ -86,7 +83,7 @@ async function start() {
                         name,
                         secondName,
                         thirdName,
-                        year
+                        admissionYear
                     } = newUser
                     const randomstring = Math.random().toString(36).slice(-8);
                     console.log(randomstring)
@@ -96,7 +93,7 @@ async function start() {
                         name: name,
                         secondName: secondName,
                         thirdName: thirdName,
-                        admissionYear: year,
+                        admissionYear: admissionYear,
                         password: hashedPassword
                     })
                     await user.save()
@@ -146,10 +143,9 @@ async function start() {
             socket.on('getUsers', async () => {
                 try {
                     const usersAll = await User.find()
-                    socket.emit('getUser', usersAll)
-
+                    socket.emit('getUsers', usersAll)
                 } catch (e) {
-                    socket.emit('getUser', 'Ошибка!')
+                    socket.emit('getUsers', 'Ошибка!')
                 }
             })
 

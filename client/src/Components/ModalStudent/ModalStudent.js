@@ -15,7 +15,7 @@ export const ModalStudent = ({ modalInfo, onClose }) => {
                 await request('addUser', form)
                 break
             case 'Сохранить':
-                await request('editUser', form)
+                await request('updateUser', form)
                 break
             case 'Удалить':
                 await request('deleteUser', form)

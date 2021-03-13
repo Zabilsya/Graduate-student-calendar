@@ -1,6 +1,6 @@
 import React, { useRef, useState } from 'react';
 import moment from 'moment'
-import {Modal} from '../../../Components/ModalStudent/Modal'
+import {ModalEvents} from '../../../Components/ModalEvents/ModalEvents'
 
 import './css/style.css'
 
@@ -25,7 +25,7 @@ export const CalendarDay = ({day, isCurrentDay, isSelectedMonth}) => {
                 </div>
             </div>
             {isOpenModal && 
-                <Modal title={day.format('LL')} onClose={closeModal} type='event'/>
+                <ModalEvents title={day.format('LL')} onClose={closeModal} type='event'/>
             }
         </>
     )

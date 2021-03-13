@@ -4,8 +4,7 @@ import {PostgraduatesTableElement} from './PostgraduatesTableElement/Postgraduat
 
 import './css/style.css'
 
-export const PostgraduatesTable = ({students, chooseStudent}) => {
-    console.log(students)
+export const PostgraduatesTable = ({students, chooseStudent, chosenStudent}) => {
     
     return (
         <>
@@ -26,7 +25,7 @@ export const PostgraduatesTable = ({students, chooseStudent}) => {
                         <tbody>
                             {
                                 students.map(student => (
-                                    <PostgraduatesTableElement key={student._id} student={student} onChooseStudent={student => chooseStudent(student)} />
+                                    <PostgraduatesTableElement key={student._id} student={student} chosenStudent={chosenStudent} onChooseStudent={() => chooseStudent(student)} />
                                 ))
                             }
                         </tbody>

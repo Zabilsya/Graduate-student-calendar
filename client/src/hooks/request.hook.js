@@ -6,18 +6,22 @@ export const useRequest = () => {
     const socket = context.socket
 
     const request = async (type, info = null) => {
+        let answer
         socket.emit(type, info)
         await new Promise(resolve => {
-            // console.log('дождались')
             socket.on(type, response => {
                 resolve(response)
             })
         })
         .then(response => {
             socket.removeAllListeners(type)
-            if (typeof response !== String) return response
+            if (typeof response !== 'string') {
+                answer = response
+                return
+            } 
             console.log(response)
         })
+        return answer
     }
 
     return request

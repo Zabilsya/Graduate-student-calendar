@@ -5,6 +5,8 @@ export const Student = ({ data, buttonText, onConfirm }) => {
         _id: '', name: '', secondName: '', thirdName: '', email: '', admissionYear: ''
     })
 
+    const disabledInput = buttonText === 'Удалить'
+
     useEffect(() => {
         if (data) {
             setForm({
@@ -26,23 +28,23 @@ export const Student = ({ data, buttonText, onConfirm }) => {
         <>
             <div className="modal-body">
                 <div className="form-floating mb-3">
-                    <input type="text" className="form-control" name="name" value={form.name} onChange={changeInputHandler} id="name" />
+                    <input type="text" className="form-control" name="name" value={form.name} onChange={changeInputHandler} id="name" disabled={disabledInput} />
                     <label htmlFor="name">Имя</label>
                 </div>
                 <div className="form-floating mb-3">
-                    <input type="text" className="form-control" name="secondName" value={form.secondName} onChange={changeInputHandler} id="secondName" />
+                    <input type="text" className="form-control" name="secondName" value={form.secondName} onChange={changeInputHandler} id="secondName" disabled={disabledInput} />
                     <label htmlFor="secondName">Фамилия</label>
                 </div>
                 <div className="form-floating mb-3">
-                    <input type="text" className="form-control" name="thirdName" value={form.thirdName} onChange={changeInputHandler} id="thirdName" />
+                    <input type="text" className="form-control" name="thirdName" value={form.thirdName} onChange={changeInputHandler} id="thirdName" disabled={disabledInput} />
                     <label htmlFor="thirdName">Отчество</label>
                 </div>
                 <div className="form-floating mb-3">
-                    <input type="email" className="form-control" name="email" value={form.email} onChange={changeInputHandler} id="email" />
+                    <input type="email" className="form-control" name="email" value={form.email} onChange={changeInputHandler} id="email" disabled={disabledInput} />
                     <label htmlFor="email">Электронная почта</label>
                 </div>
                 <div className="form-floating form-floating-last">
-                    <input type="number" className="form-control" name="admissionYear" value={form.admissionYear} onChange={changeInputHandler} id="admissionYear" />
+                    <input type="number" className="form-control" name="admissionYear" value={form.admissionYear} onChange={changeInputHandler} id="admissionYear" disabled={disabledInput} />
                     <label htmlFor="admissionYear">Год поступления</label>
                 </div>
             </div>

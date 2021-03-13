@@ -1,29 +1,16 @@
 import React, { useState, useEffect, useContext } from 'react'
-import { useRequest } from './../../hooks/request.hook'
 import { PostgraduatesTable } from './PostgraduatesTable/PostgraduatesTable'
-import { Modal } from '../../Components/ModalStudent/ModalStudent'
+import { ModalStudent } from '../../Components/ModalStudent/ModalStudent'
 
 import './css/style.css'
 import { useStudents } from '../../hooks/students.hook'
 
 export const PostgraduatesInfoPage = () => {
-    const students = useStudents()
-    const [chosenStudent, setChosenStudent] = useState(false)
+    const { students, chosenStudent, setChosenStudent } = useStudents()
     const [isOpenModal, setIsOpenModal] = useState(false)
     const [modalInfo, setModalInfo] = useState({
         data: '', title: '', buttonText: ''
     })
-    // const request = useRequest()
-
-    // useEffect(() => {
-    //     const response = request()
-    //     if (response && response.success) {
-    //         setStudents(response.message)
-    //         setChosenStudent(response.message[0])
-    //     } else if (!response.success) {
-    //         setStudents('')
-    //     }
-    // }, [])
 
     const chooseStudent = student => {
         setChosenStudent(student)
@@ -57,7 +44,7 @@ export const PostgraduatesInfoPage = () => {
     return (
         <div className="info">
             <div className="content-elements">
-                <PostgraduatesTable students={students} chooseStudent={chooseStudent}/>
+                <PostgraduatesTable students={students} chooseStudent={chooseStudent} chosenStudent={chosenStudent}/>
             </div>
             <div>
                 <button type="button" id="" onClick={editStudent}>Редактировать информацию об аспиранте</button>
@@ -65,7 +52,7 @@ export const PostgraduatesInfoPage = () => {
                 <button type="button"onClick={deleteStudent}>Удалить аспиранта</button>
             </div>
             {isOpenModal && 
-                <Modal modalInfo={modalInfo} onClose={closeModal} type='student'/>
+                <ModalStudent modalInfo={modalInfo} onClose={closeModal}/>
             }
         </div>
     )
