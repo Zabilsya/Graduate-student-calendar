@@ -1,5 +1,3 @@
-//#region getUser
-
 const User = require('./../models/User')
 
 module.exports = function(socket,userChangeStream){
@@ -124,9 +122,3 @@ module.exports = function(socket,userChangeStream){
     }
 
 }
-
-    
-
-
-
-//#endregion getUser
