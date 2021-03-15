@@ -4,8 +4,14 @@ $white:#ffffff;
 .day {
     position: relative;
     min-width: 120px;
-    min-height: 80px;
+    min-height: 90px;
     background-color: $white;
+    cursor: pointer;
+    transition: background-color .1s linear;
+
+    &:hover {
+        background-color: rgb(203, 244, 202);
+    }
     
     .number-wrapper {
         position: absolute;
@@ -19,6 +25,16 @@ $white:#ffffff;
         .not-current {
             opacity: .4;
         }
+    }
+
+    .events {
+        width: 100%;
+        position: absolute;
+        bottom: 0;
+        left: 50%;
+        transform: translateX(-50%);
+        text-align: center;
+        font-size: 14px;
     }
 
     .current {

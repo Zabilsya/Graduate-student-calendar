@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import ReactDOM from 'react-dom';
+import moment from "moment";
 import { useRequest } from '../../hooks/request.hook';
 import { Event } from '../Event/Event'
 

@@ -3,7 +3,6 @@ import {CalendarHeader} from './CalendarHeader/CalendarHeader'
 import {CalendarGrid} from './CalendarGrid/CalendarGrid'
 import moment from 'moment'
 
-// import './../../scripts/script'
 import './css/style.css'
 
 export const CalendarPage = () => {

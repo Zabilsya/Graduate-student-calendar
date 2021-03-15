@@ -1,8 +1,15 @@
 .day {
   position: relative;
   min-width: 120px;
-  min-height: 80px;
+  min-height: 90px;
   background-color: #ffffff;
+  cursor: pointer;
+  -webkit-transition: background-color .1s linear;
+  transition: background-color .1s linear;
+}
+
+.day:hover {
+  background-color: #cbf4ca;
 }
 
 .day .number-wrapper {
@@ -23,6 +30,17 @@
 
 .day .number-wrapper .not-current {
   opacity: .4;
+}
+
+.day .events {
+  width: 100%;
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  -webkit-transform: translateX(-50%);
+          transform: translateX(-50%);
+  text-align: center;
+  font-size: 14px;
 }
 
 .day .current {

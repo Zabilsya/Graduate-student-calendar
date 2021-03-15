@@ -2,7 +2,7 @@ const moment = require('moment')
 const Event = require('./../models/Event')
 
 module.exports = function (socket, eventChangeStream) {
-
+    
     var socket = socket
     var eventChangeStream = eventChangeStream
 
@@ -13,6 +13,7 @@ module.exports = function (socket, eventChangeStream) {
             switch (change.operationType) {
                 case "insert":
                     // TODO: Преобразовать date к moment. Предварительно увидеть в каком виде mongo возвращает дату.
+
                     const newEvent = {
                         _id: change.fullDocument._id,
                         name: change.fullDocument.name,
@@ -55,8 +56,9 @@ module.exports = function (socket, eventChangeStream) {
         })
 
         socket.on('addEvent', async (newEvent) => {
+            
             try {
-                const {
+                let {
                     name,
                     description,
                     startDatetime,
@@ -65,12 +67,16 @@ module.exports = function (socket, eventChangeStream) {
                     notificationPeriod,
                     info
                 } = newEvent
-
-                var date = moment().utc().add(notificationPeriod, 'days').format('D.M.Y')
-                // * Ожидаю startDatetime в UTC !
-                var time = startDatetime.format('H:mm')
-
-                const nextNotifficationDatetime = moment(date + " " + time)
+                priority = 2
+                type ='huy'
+                notificationPeriod = 2
+                
+                const momentTime = moment(startDatetime)
+                startDatetime = new Date(momentTime.format().slice(0, -8) + '00').toISOString()
+                
+                const date = momentTime.add(notificationPeriod, 'days')
+                
+                const nextNotifficationDatetime = new Date(date.format().slice(0, -8) + '00').toISOString()
 
                 const event = new Event({
                     name: name,
@@ -125,7 +131,9 @@ module.exports = function (socket, eventChangeStream) {
     this.getEvent = function () {
         socket.on('getEvents', async () => {
             try {
+                console.log('куку')
                 const eventsAll = await Event.find()
+                console.log(eventsAll)
                 socket.emit('getEvents', eventsAll)
             } catch (e) {
                 socket.emit('getEvents', 'Ошибка!')

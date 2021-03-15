@@ -1,6 +1,8 @@
-import React, { useRef, useState } from 'react';
+import React, { useState } from 'react';
 import moment from 'moment'
 import {ModalEvents} from '../../../Components/ModalEvents/ModalEvents'
+
+import eventTypes from '../../../data/eventTypes'
 
 import './css/style.css'
 
@@ -22,16 +24,17 @@ export const CalendarDay = ({day, dayEvents, isCurrentDay, isSelectedMonth}) => 
         }
         if (dayEvents.length <= 3) {
             return dayEvents.map(event => (
-                <div className="event">
+                <div className="event" style={{background:eventTypes['Конференция']}}>
                     {event.name}
                 </div>))
         }
-        let temp
-        for (let i = 0; i < 3; i++) {
-            temp += <div className="event">{dayEvents[i].name}</div>
+        let temp = 0
+            return dayEvents.map(event => {
+                temp++
+                if (temp > 3) return
+                return <div className="event">{event.name}</div>
+            })
         }
-        return temp
-    }
 
     return (
         <>
@@ -41,7 +44,9 @@ export const CalendarDay = ({day, dayEvents, isCurrentDay, isSelectedMonth}) => 
                         {day.format('D')}
                     </div>
                 </div>
-                {events}
+                <div className="events">
+                    {events}
+                </div>
             </div>
             {isOpenModal && 
                 <ModalEvents title={day.format('LL')} onClose={closeModal} dayEvents={dayEvents}/>

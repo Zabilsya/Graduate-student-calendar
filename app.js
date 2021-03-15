@@ -56,6 +56,7 @@ async function start() {
             var eventAction = new EventAction(socket, eventChangeStream)
 
             eventAction.subscribeToEvents()
+            eventAction.getEvent()
 
 
 

@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react"
 import { useRequest } from "./request.hook"
+import moment from "moment";
 
 export const useSchedule = socket => {
   const [events, setEvents] = useState([])
@@ -9,6 +10,7 @@ export const useSchedule = socket => {
     if (socket) {
       getEvents()
       socket.on('newEvent', message => {
+        message.startDatetime = moment(message.startDatetime)
         setEvents(events => ([...events, message]))
       })
   
@@ -35,6 +37,10 @@ export const useSchedule = socket => {
   async function getEvents() {
       let events = false
       events = await request('getEvents')
+      events.forEach((item) => {
+        item.startDatetime = moment(item.startDatetime)
+      })
+      
       setEvents(events)
   }
 
