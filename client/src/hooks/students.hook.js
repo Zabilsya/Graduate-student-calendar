@@ -6,8 +6,7 @@ export const useStudents = () => {
   const [students, setStudents] = useState([])
   const [chosenStudent, setChosenStudent] = useState(false)
   const request = useRequest()
-  const context = useContext(ScheduleContext)
-  const socket = context.socket
+  const {socket} = useContext(ScheduleContext)
 
   useEffect(() => {
     getStudents()

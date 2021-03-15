@@ -5,29 +5,17 @@ import { Event } from '../Event/Event'
 
 // import './css/style.css'
 
-export const ModalEvents = ({ modalInfo, onClose }) => {
-    const [isEditing, setIsEditing] = useState(false)
-    const { data, title, buttonText } = modalInfo
+export const ModalEvents = ({ title, dayEvents, onClose }) => {
+    const [isAdding, setIsAdding] = useState(false)
     const request = useRequest()
 
     const changeModalMode = () => {
-        setIsEditing(true)
+        setIsAdding(isAdding => !isAdding)
     }
 
-    const onConfirmChanges = async form => {
-        switch (buttonText) {
-            case 'Добавить':
-                await request('addUser', form)
-                break
-            case 'Сохранить':
-                await request('editUser', form)
-                break
-            case 'Удалить':
-                await request('deleteUser', form)
-                break
-            default: break
-        }
-           onClose()
+
+    const onConfirmChanges = async (type, form) => {
+        await request(type, form)
     }
 
     return (
@@ -38,12 +26,24 @@ export const ModalEvents = ({ modalInfo, onClose }) => {
                         <h2 className="modal-title">{title}</h2>
                         <div className="modal-close" onClick={onClose}></div>
                     </div>
-                    {/* {
-                        
-                        : isEditing ?
-                            <Event />
-                            : ''
-                    } */}
+                    {dayEvents.length !== 0 &&
+                        dayEvents.map(data => (
+                            <Event data={data} reveal={false} changeModalMode={changeModalMode} onConfirmChanges={onConfirmChanges} key={data._id}/>
+                        ))
+                    }
+                    {isAdding && <Event data={''} reveal={true} changeModalMode={changeModalMode} onConfirmChanges={onConfirmChanges} />}
+                    {(!isAdding && dayEvents.length === 0) &&
+
+                        <div className="modal-body">
+                            <h2 className="event-title">Мероприятий в данный день не запланировано</h2>
+                        </div>
+
+                    }
+                    {!isAdding &&
+                        <div className="modal-footer">
+                            <button className="modal-footer-button" onClick={changeModalMode}>Добавить мероприятие</button>
+                        </div>
+                    }
                 </div>
             </div>,
             document.getElementById('modal')

@@ -4,8 +4,9 @@ import {ModalEvents} from '../../../Components/ModalEvents/ModalEvents'
 
 import './css/style.css'
 
-export const CalendarDay = ({day, isCurrentDay, isSelectedMonth}) => {
+export const CalendarDay = ({day, dayEvents, isCurrentDay, isSelectedMonth}) => {
     const [isOpenModal, setIsOpenModal] = useState(false)
+    const events = checkNumberOfEvents()
 
     const openModal = () => {
         setIsOpenModal(true)
@@ -13,6 +14,23 @@ export const CalendarDay = ({day, isCurrentDay, isSelectedMonth}) => {
 
     const closeModal = () => {
         setIsOpenModal(false)
+    }
+
+    function checkNumberOfEvents() {
+        if (dayEvents.length === 0) {
+            return ''
+        }
+        if (dayEvents.length <= 3) {
+            return dayEvents.map(event => (
+                <div className="event">
+                    {event.name}
+                </div>))
+        }
+        let temp
+        for (let i = 0; i < 3; i++) {
+            temp += <div className="event">{dayEvents[i].name}</div>
+        }
+        return temp
     }
 
     return (
@@ -23,9 +41,10 @@ export const CalendarDay = ({day, isCurrentDay, isSelectedMonth}) => {
                         {day.format('D')}
                     </div>
                 </div>
+                {events}
             </div>
             {isOpenModal && 
-                <ModalEvents title={day.format('LL')} onClose={closeModal} type='event'/>
+                <ModalEvents title={day.format('LL')} onClose={closeModal} dayEvents={dayEvents}/>
             }
         </>
     )

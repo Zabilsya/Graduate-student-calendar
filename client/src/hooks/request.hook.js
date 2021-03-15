@@ -1,9 +1,9 @@
 import { useCallback, useContext } from 'react'
 import { ScheduleContext } from '../context/ScheduleContext'
 
-export const useRequest = () => {
-    const context = useContext(ScheduleContext)
-    const socket = context.socket
+export const useRequest = (transmittedSocket = null) => {
+    let {socket} = useContext(ScheduleContext)
+    if (!socket) socket = transmittedSocket
 
     const request = async (type, info = null) => {
         let answer

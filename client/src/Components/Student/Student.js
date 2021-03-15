@@ -18,7 +18,7 @@ export const Student = ({ data, buttonText, onConfirm }) => {
                 admissionYear: data.admissionYear
             })
         }
-    }, [])
+    }, [data])
 
     const changeInputHandler = event => {
         setForm({ ...form, [event.target.name]: event.target.value })
