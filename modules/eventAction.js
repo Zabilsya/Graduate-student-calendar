@@ -1,10 +1,14 @@
 const moment = require('moment')
 const Event = require('./../models/Event')
+const User = require('./../models/User')
+const config = require('config')
 
-module.exports = function (socket, eventChangeStream) {
-    
-    var socket = socket
-    var eventChangeStream = eventChangeStream
+
+module.exports = function (socket, eventChangeStream, userId) {
+
+    const socket = socket
+    const eventChangeStream = eventChangeStream
+    const userId = userId
 
     this.subscribeToEvents = function () {
 
@@ -12,7 +16,6 @@ module.exports = function (socket, eventChangeStream) {
 
             switch (change.operationType) {
                 case "insert":
-                    // TODO: Преобразовать date к moment. Предварительно увидеть в каком виде mongo возвращает дату.
 
                     const newEvent = {
                         _id: change.fullDocument._id,
@@ -23,22 +26,59 @@ module.exports = function (socket, eventChangeStream) {
                         type: change.fullDocument.type,
                         notificationPeriod: change.fullDocument.notificationPeriod,
                         info: change.fullDocument.info,
-                        nextNotifficationDatetime: change.fullDocument.lastNotifficationDatetime
+                        nextNotifficationDatetime: change.fullDocument.lastNotifficationDatetime,
+                        owner: change.fullDocument.owner
                     }
 
-                    socket.emit("newEvent", newEvent);
+                    if (userId == config.get('superuserId') || (userId == newEvent.owner)) {
+
+                        socket.emit("newEvent", newEvent)
+
+                    } else if (newEvent.owner.lenght == 'YYYY'.length) {
+
+                        const admissionYear = await User.findOne({
+                            "_id": userId
+                        }).admissionYear
+
+                        if (admissionYear == newEvent.owner) {
+                            socket.emit("newEvent", newEvent)
+                        }
+                    }
+
+
                     break;
 
                 case "delete":
+
+                    const response = await Event.findOne({
+                        "_id": change.documentKey._id
+                    })
+
+                    if (userId == config.get('superuserId') || (userId == response.owner)) {
+
+                        socket.emit("deletedEvent", response.documentKey._id)
+
+                    } else if (response.owner.lenght == 'YYYY'.length) {
+
+                        const admissionYear = await User.findOne({
+                            "_id": userId
+                        }).admissionYear
+
+                        if (admissionYear == response.owner) {
+                            socket.emit("deletedEvent", response)
+                        }
+                    }
                     socket.emit("deletedEvent", change.documentKey._id);
                     break;
 
+
                 case "update":
-                    const response = await User.findOne({
+
+                    const response = await Event.findOne({
                         "_id": change.documentKey._id
                     })
-                    // TODO: То же.
-                    const updatedUser = {
+
+                    const updatedEvent = {
                         _id: response._id,
                         name: response.name,
                         description: response.description,
@@ -48,15 +88,28 @@ module.exports = function (socket, eventChangeStream) {
                         notificationPeriod: response.notificationPeriod,
                         info: response.info
                     }
+                    if (userId == config.get('superuserId') || (userId == response.owner)) {
 
-                    socket.emit("updatedEvent", updatedUser)
+                        socket.emit("updatedEvent", updatedEvent)
+
+                    } else if (response.owner.lenght == 'YYYY'.length) {
+
+                        const admissionYear = await User.findOne({
+                            "_id": userId
+                        }).admissionYear
+
+                        if (admissionYear == response.owner) {
+                            socket.emit("updatedEvent", updatedEvent)
+                        }
+                    }
+
                     break;
 
             }
         })
 
         socket.on('addEvent', async (newEvent) => {
-            
+
             try {
                 let {
                     name,
@@ -68,14 +121,14 @@ module.exports = function (socket, eventChangeStream) {
                     info
                 } = newEvent
                 priority = 2
-                type ='huy'
+                type = 'huy'
                 notificationPeriod = 2
-                
+
                 const momentTime = moment(startDatetime)
                 startDatetime = new Date(momentTime.format().slice(0, -8) + '00').toISOString()
-                
+
                 const date = momentTime.add(notificationPeriod, 'days')
-                
+
                 const nextNotifficationDatetime = new Date(date.format().slice(0, -8) + '00').toISOString()
 
                 const event = new Event({
@@ -86,7 +139,8 @@ module.exports = function (socket, eventChangeStream) {
                     type: type,
                     notificationPeriod: notificationPeriod,
                     info: info,
-                    nextNotifficationDatetime: nextNotifficationDatetime
+                    nextNotifficationDatetime: nextNotifficationDatetime,
+                    owner: owner
                 })
                 await event.save()
                 socket.emit('addEvent', 'Мероприятие успешно добавлено в систему!')
@@ -98,7 +152,7 @@ module.exports = function (socket, eventChangeStream) {
         socket.on('deleteEvent', async (eventForDelete) => {
             try {
 
-                await User.deleteOne({
+                await Event.deleteOne({
                     "_id": eventForDelete._id
                 })
                 socket.emit('deleteEvent', 'Событие успешно удалено')
@@ -110,7 +164,7 @@ module.exports = function (socket, eventChangeStream) {
         socket.on('updateEvent', async (eventForUpdate) => {
             try {
 
-                await User.updateOne({
+                await Event.updateOne({
                     "_id": eventForUpdate._id
                 }, {
                     "name": eventForUpdate.name,
@@ -128,13 +182,32 @@ module.exports = function (socket, eventChangeStream) {
         })
 
     }
-    this.getEvent = function () {
+    this.getEvents = function () {
         socket.on('getEvents', async () => {
+
+            let userEvents
             try {
-                console.log('куку')
-                const eventsAll = await Event.find()
-                console.log(eventsAll)
-                socket.emit('getEvents', eventsAll)
+
+                if (userId != config.get('superuserId')) {
+
+                    const admissionYear = await User.findOne({
+                        "_id": userId
+                    }).admissionYear
+
+                    userEvents = await Event.find({
+                        $or: [{
+                                "owner": admissionYear
+                            },
+                            {
+                                "owner": userId
+                            }
+                        ]
+                    })
+
+                } else {
+                    userEvents = await Event.find()
+                }
+                socket.emit('getEvents', userEvents)
             } catch (e) {
                 socket.emit('getEvents', 'Ошибка!')
             }

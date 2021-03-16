@@ -44,23 +44,22 @@ async function start() {
 
         io.sockets.on('connection', socket => {
 
-            //#region UserAction
-            var userAction = new UserAction(socket, userChangeStream)
-
-            userAction.subscribeToEvents()
-            userAction.getUser()
-            //#endregion UserAction
+                    socket.on('enter', userId => {
 
 
-            //#region EventAction
-            var eventAction = new EventAction(socket, eventChangeStream)
+                        var userAction = new UserAction(socket, userChangeStream, userId)
 
-            eventAction.subscribeToEvents()
-            eventAction.getEvent()
+                        userAction.subscribeToEvents()
+                        userAction.getUser()
 
+                        var eventAction = new EventAction(socket, eventChangeStream, userId)
 
+                        eventAction.subscribeToEvents()
+                        eventAction.getEvents()
 
-            //#endregion EventAction
+                    })
+
+            
 
 
 

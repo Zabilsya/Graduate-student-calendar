@@ -19,14 +19,21 @@ module.exports = function(socket,userChangeStream){
                         name: change.fullDocument.name,
                         secondName: change.fullDocument.secondName,
                         thirdName: change.fullDocument.thirdName,
-                        admissionYear: change.fullDocument.admissionYear,
+                        admissionYear: change.fullDocument.admissionYear
                     }
 
-                    socket.emit("newUser", newUser);
+                    if (userId == config.get('superuserId') || userId == newUser._id ){
+                        socket.emit("newUser", newUser);
+                    }
+
                     break;
 
                 case "delete":
-                    socket.emit("deletedUser", change.documentKey._id);
+
+                    if (userId == config.get('superuserId')){
+                        socket.emit("deletedUser", change.documentKey._id);
+                    }
+                    
                     break;
 
                 case "update":     
@@ -42,8 +49,11 @@ module.exports = function(socket,userChangeStream){
                         thirdName: respone.thirdName,
                         admissionYear: respone.admissionYear,
                     }
-                   
-                    socket.emit("updatedUser", updatedUser)
+
+                    if (userId == config.get('superuserId') || userId == newUser._id ){
+                        socket.emit("updatedUser", updatedUser)
+                    }            
+                    
                     break;
 
             }
@@ -111,14 +121,33 @@ module.exports = function(socket,userChangeStream){
 
     this.getUser = function(){
 
-        socket.on('getUsers', async () => {
-            try {
-                const usersAll = await User.find()
-                socket.emit('getUsers', usersAll)
-            } catch (e) {
-                socket.emit('getUsers', 'Ошибка!')
-            }
-        })
+        if (userId == config.get('superuserId')){
+            
+            socket.on('getUsers', async () => {
+                try {
+                    const usersAll = await User.find()
+                    socket.emit('getUsers', usersAll)
+                } catch (e) {
+                    socket.emit('getUsers', 'Ошибка!')
+                }
+            })
+
+        }
+        else {
+            socket.on('getUsers', async () => {
+                try {
+                    const usersAll = await User.findOne({
+                        "_id": userId
+                    })
+                    socket.emit('getUsers', usersAll)
+                } catch (e) {
+                    socket.emit('getUsers', 'Ошибка!')
+                }
+            })
+        }
+
+
+        
     }
 
 }
