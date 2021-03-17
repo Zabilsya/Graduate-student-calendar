@@ -6,7 +6,7 @@ import { Event } from '../Event/Event'
 
 import './css/style.css'
 
-export const ModalEvents = ({ title, dayEvents, onClose }) => {
+export const ModalEvents = ({ title, dayEvents, onClose, eventTarget }) => {
     const [isAdding, setIsAdding] = useState(false)
     const request = useRequest()
 
@@ -31,10 +31,10 @@ export const ModalEvents = ({ title, dayEvents, onClose }) => {
                     <div className="modal-body">
                         {(dayEvents.length !== 0 && !isAdding) &&
                             dayEvents.map(data => (
-                                <Event data={data} reveal={false} changeModalMode={changeModalMode} onConfirmChanges={onConfirmChanges} key={data._id} />
+                                <Event data={data} reveal={false} changeModalMode={changeModalMode} onConfirmChanges={onConfirmChanges} eventTarget={eventTarget} key={data._id} />
                             ))
                         }
-                        {isAdding && <Event data={''} reveal={true} changeModalMode={changeModalMode} onConfirmChanges={onConfirmChanges} />}
+                        {isAdding && <Event data={''} reveal={true} changeModalMode={changeModalMode} onConfirmChanges={onConfirmChanges} eventTarget={eventTarget} />}
                         {(!isAdding && dayEvents.length === 0) &&
                             <h4 className="event-title">Мероприятий на данный день не запланировано</h4>
                         }

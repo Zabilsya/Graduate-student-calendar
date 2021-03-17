@@ -1,17 +1,16 @@
 const User = require('./../models/User')
+const config = require('config')
+const bcrypt = require('bcryptjs')
 
-module.exports = function(socket, userChangeStream){
 
-    var socket = socket
-    var userChangeStream = userChangeStream
+module.exports = function(socket, userChangeStream, userId){
 
     this.subscribeToEvents = function() {
 
         userChangeStream.on("change", async (change) => {
-
+    
             switch (change.operationType) {
                 case "insert":
-
                     const newUser = {
                         _id: change.fullDocument._id,
                         email: change.fullDocument.email,
@@ -21,21 +20,23 @@ module.exports = function(socket, userChangeStream){
                         admissionYear: change.fullDocument.admissionYear
                     }
 
-                    if (userId == config.get('superuserId') || userId == newUser._id.toString() ){
+                    if (userId == config.get('superuserId') || userId == newUser._id.toString()) {
                         socket.emit("newUser", newUser);
                     }
 
                     break;
 
                 case "delete":
-
-                    if (userId == config.get('superuserId')){
+                    
+                    if (userId == config.get('superuserId')) {
+                        
                         socket.emit("deletedUser", change.documentKey._id);
                     }
                     
                     break;
 
-                case "update":     
+                case "update":
+    
                     const response = await User.findOne({
                         "_id": change.documentKey._id
                     })
@@ -87,9 +88,10 @@ module.exports = function(socket, userChangeStream){
 
 
         socket.on('deleteUser', async (userForDelete) => {
+          
             try {
                 await User.deleteOne({
-                    "id": userForDelete.documentKey._id
+                    "_id": userForDelete._id
                 })
                 socket.emit('deleteUser', 'Аспирант успешно удален')
             } catch (e) {
@@ -99,10 +101,23 @@ module.exports = function(socket, userChangeStream){
 
 
         socket.on('updateUser', async (userForUpdate) => {
-            try {
 
+            const current = await User.findOne({
+                "_id": userForUpdate._id
+            })
+
+            if (current.email == userForUpdate.email && 
+                current.name == userForUpdate.name && 
+                current.secondName == userForUpdate.secondName && 
+                current.thirdName == userForUpdate.thirdName &&
+                current.admissionYear == userForUpdate.admissionYear) {
+                    socket.emit('updateUser', 'Вы не внесли никаких изменений')
+                    return
+                }
+           
+            try {
                 await User.updateOne({
-                    "_id": userForUpdate.documentKey._id
+                    "_id": userForUpdate._id
                 }, {
                     "email": userForUpdate.email,
                     "name": userForUpdate.name,
@@ -119,7 +134,7 @@ module.exports = function(socket, userChangeStream){
 
     this.getUser = function(){
 
-        if (userId == config.get('superuserId')){
+        if (userId == config.get('superuserId')) {
             
             socket.on('getUsers', async () => {
                 try {
@@ -143,8 +158,6 @@ module.exports = function(socket, userChangeStream){
                 }
             })
         }
-
-
         
     }
 

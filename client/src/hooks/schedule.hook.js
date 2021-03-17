@@ -10,7 +10,7 @@ export const useSchedule = socket => {
     if (socket) {
       getEvents()
       socket.on('newEvent', message => {
-        message.startDatetime = moment(message.startDatetime)
+        message.startDt = moment(message.startDt)
         setEvents(events => ([...events, message]))
       })
   
@@ -22,7 +22,7 @@ export const useSchedule = socket => {
       })
   
       socket.on('updatedEvent', message => {
-        message.startDatetime = moment(message.startDatetime)
+        message.startDt = moment(message.startDt)
         setEvents(events => {
           const index = events.findIndex(item => item._id === message._id)
           const before = events.slice(0, index);
@@ -39,7 +39,7 @@ export const useSchedule = socket => {
       let events = false
       events = await request('getEvents')
       events.forEach(item => {
-        item.startDatetime = moment(item.startDatetime)
+        item.startDt = moment(item.startDt)
       })
       
       setEvents(events)

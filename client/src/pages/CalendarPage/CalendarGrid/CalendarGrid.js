@@ -1,13 +1,12 @@
 import React, { useState, useContext } from 'react';
 import moment from 'moment'
 import {CalendarDay} from './../CalendarDay/CalendarDay'
-import {ScheduleContext} from '../../../context/ScheduleContext'
 
 import './css/style.css'
 
-export const CalendarGrid = ({ startDay, today }) => {
-    const {events} = useContext(ScheduleContext)
-    const filteredEvents = events.filter(event => event.startDatetime.isSame(today, 'month'))
+export const CalendarGrid = ({ startDay, today, events, eventTarget }) => {
+    console.log(events)
+    const filteredEvents = events.filter(event => event.startDt.isSame(today, 'month'))
     const totalDays = 42
     const day = startDay.clone().subtract(1, 'day')
     const daysArr = [...Array(totalDays)].map(() => day.add(1, 'day').clone())
@@ -26,8 +25,8 @@ export const CalendarGrid = ({ startDay, today }) => {
             <div className="calendar-grid">
                 {
                     daysArr.map((day, index) => {
-                        const dayEvents = filteredEvents.filter(event => event.startDatetime.isSame(day, 'day'))
-                        return <CalendarDay day={day} dayEvents={dayEvents} isCurrentDay={isCurrentDay} isSelectedMonth={isSelectedMonth} key={index}/>
+                        const dayEvents = filteredEvents.filter(event => event.startDt.isSame(day, 'day'))
+                        return <CalendarDay day={day} dayEvents={dayEvents} isCurrentDay={isCurrentDay} isSelectedMonth={isSelectedMonth} eventTarget={eventTarget} key={index}/>
                     })
                 }
             </div>

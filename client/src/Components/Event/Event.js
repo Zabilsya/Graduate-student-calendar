@@ -13,9 +13,9 @@ import { Dropdown } from './../Dropdown/Dropdown'
 
 import './css/style.css'
 
-export const Event = ({ data, reveal, changeModalMode, onConfirmChanges }) => {
+export const Event = ({ data, reveal, changeModalMode, onConfirmChanges, eventTarget }) => {
     const [form, setForm] = useState({
-        _id: '', name: '', description: '', startDatetime: new Date(), priority: '', type: '', notificationFrequency: '', info: ''
+        _id: '', name: '', description: '', startDt: new Date(), priority: '', type: '', notificationPeriod: '', info: '', target: eventTarget 
     })
     const [eventVisibility, setEventVisibility] = useState(reveal) // тест при обновлении с другого компа мероприятия (ставим false если плохо)
     const [editingMode, setEditingMode] = useState(reveal) // тест при обновлении с другого компа мероприятия (ставим false если плохо)
@@ -30,16 +30,17 @@ export const Event = ({ data, reveal, changeModalMode, onConfirmChanges }) => {
 
     useEffect(() => {
         if (data) {
-            setForm({
+            setForm(prev => ({
                 _id: data._id,
                 name: data.name,
                 description: data.description,
-                startDatetime: data.startDatetime,
+                startDt: data.startDt,
                 priority: data.priority,
                 type: data.type,
-                notificationFrequency: data.notificationFrequency,
-                info: data.info
-            })
+                notificationPeriod: data.notificationPeriod,
+                info: data.info,
+                target: prev.target
+            }))
         }
         if (reveal) {
             setEventVisibility(true)
@@ -52,7 +53,7 @@ export const Event = ({ data, reveal, changeModalMode, onConfirmChanges }) => {
     }
 
     const changeStartDateHandler = date => {
-        setForm({ ...form, startDatetime: date })
+        setForm({ ...form, startDt: date })
     }
 
     const cancelAdding = () => {
@@ -63,10 +64,10 @@ export const Event = ({ data, reveal, changeModalMode, onConfirmChanges }) => {
                 _id: data._id,
                 name: data.name,
                 description: data.description,
-                startDatetime: data.startDatetime,
+                startDt: data.startDt,
                 priority: data.priority,
                 type: data.type,
-                notificationFrequency: data.notificationFrequency,
+                notificationPeriod: data.notificationPeriod,
                 info: data.info
             })
         }
@@ -77,7 +78,10 @@ export const Event = ({ data, reveal, changeModalMode, onConfirmChanges }) => {
             onConfirmChanges('addEvent', form)
             changeModalMode()
         }
-        else onConfirmChanges('updateEvent', form)
+        else {
+            onConfirmChanges('updateEvent', form)
+            setEditingMode(false)
+        } 
     }
 
     const deleteEvent = () => {
@@ -116,7 +120,7 @@ export const Event = ({ data, reveal, changeModalMode, onConfirmChanges }) => {
                             variant="inline"
                             ampm={false}
                             label="Дата"
-                            value={form.startDatetime}
+                            value={form.startDt}
                             onChange={changeStartDateHandler}
                             disablePast
                             format="dd/MM/yyyy"
@@ -125,7 +129,7 @@ export const Event = ({ data, reveal, changeModalMode, onConfirmChanges }) => {
                             readOnly={!editingMode}
                             ampm={false}
                             label="Время"
-                            value={form.startDatetime}
+                            value={form.startDt}
                             onChange={changeStartDateHandler}
                         />
                     </MuiPickersUtilsProvider>

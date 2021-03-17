@@ -6,7 +6,7 @@ import eventTypes from '../../../data/eventTypes'
 
 import './css/style.css'
 
-export const CalendarDay = ({day, dayEvents, isCurrentDay, isSelectedMonth}) => {
+export const CalendarDay = ({day, dayEvents, isCurrentDay, isSelectedMonth, eventTarget}) => {
     const [isOpenModal, setIsOpenModal] = useState(false)
     const events = checkNumberOfEvents()
 
@@ -49,7 +49,7 @@ export const CalendarDay = ({day, dayEvents, isCurrentDay, isSelectedMonth}) => 
                 </div>
             </div>
             {isOpenModal && 
-                <ModalEvents title={day.format('LL')} onClose={closeModal} dayEvents={dayEvents}/>
+                <ModalEvents title={day.format('LL')} onClose={closeModal} dayEvents={dayEvents} eventTarget={eventTarget}/>
             }
         </>
     )

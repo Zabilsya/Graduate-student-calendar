@@ -29,6 +29,7 @@ export const useStudents = () => {
         const before = students.slice(0, index);
         const after = students.slice(index + 1);
         const newList = [...before, message, ...after];
+        setChosenStudent(message)
         return newList
       })
     })
