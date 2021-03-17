@@ -21,30 +21,29 @@ module.exports = function (socket, eventChangeStream, userId) {
                         _id: change.fullDocument._id,
                         name: change.fullDocument.name,
                         description: change.fullDocument.description,
-                        startDatetime: change.fullDocument.startDatetime,
+                        startDt: change.fullDocument.startDt,
                         priority: change.fullDocument.priority,
                         type: change.fullDocument.type,
                         notificationPeriod: change.fullDocument.notificationPeriod,
                         info: change.fullDocument.info,
-                        nextNotifficationDatetime: change.fullDocument.lastNotifficationDatetime,
-                        owner: change.fullDocument.owner
+                        nextNotifficationDt: change.fullDocument.nextNotifficationDt,
+                        target: change.fullDocument.target
                     }
 
-                    if (userId == config.get('superuserId') || (userId == newEvent.owner)) {
+                    if (userId == config.get('superuserId') || (userId == newEvent.target)) {
 
                         socket.emit("newEvent", newEvent)
 
-                    } else if (newEvent.owner.lenght == 'YYYY'.length) {
+                    } else if (newEvent.target.lenght == 'YYYY'.length) {
 
                         const admissionYear = await User.findOne({
                             "_id": userId
                         }).admissionYear
 
-                        if (admissionYear == newEvent.owner) {
+                        if (admissionYear == newEvent.target) {
                             socket.emit("newEvent", newEvent)
                         }
                     }
-
 
                     break;
 
@@ -54,17 +53,17 @@ module.exports = function (socket, eventChangeStream, userId) {
                         "_id": change.documentKey._id
                     })
 
-                    if (userId == config.get('superuserId') || (userId == response.owner)) {
+                    if (userId == config.get('superuserId') || (userId == response.target)) {
 
                         socket.emit("deletedEvent", response.documentKey._id)
 
-                    } else if (response.owner.lenght == 'YYYY'.length) {
+                    } else if (response.target.lenght == 'YYYY'.length) {
 
                         const admissionYear = await User.findOne({
                             "_id": userId
                         }).admissionYear
 
-                        if (admissionYear == response.owner) {
+                        if (admissionYear == response.target) {
                             socket.emit("deletedEvent", response)
                         }
                     }
@@ -74,37 +73,39 @@ module.exports = function (socket, eventChangeStream, userId) {
 
                 case "update":
 
-                    const response = await Event.findOne({
-                        "_id": change.documentKey._id
-                    })
+                    if (!change.updateDescription.updatedFields.nextNotifficationDatetime) {
 
-                    const updatedEvent = {
-                        _id: response._id,
-                        name: response.name,
-                        description: response.description,
-                        startDatetime: response.startDatetime,
-                        priority: response.priority,
-                        type: response.type,
-                        notificationPeriod: response.notificationPeriod,
-                        info: response.info
-                    }
-                    if (userId == config.get('superuserId') || (userId == response.owner)) {
+                        const response = await Event.findOne({
+                            "_id": change.documentKey._id
+                        })
 
-                        socket.emit("updatedEvent", updatedEvent)
 
-                    } else if (response.owner.lenght == 'YYYY'.length) {
+                        const updatedEvent = {
+                            _id: response._id,
+                            name: response.name,
+                            description: response.description,
+                            startDt: response.startDt,
+                            priority: response.priority,
+                            type: response.type,
+                            notificationPeriod: response.notificationPeriod,
+                            info: response.info
+                        }
+                        if (userId == config.get('superuserId') || (userId == response.target)) {
 
-                        const admissionYear = await User.findOne({
-                            "_id": userId
-                        }).admissionYear
-
-                        if (admissionYear == response.owner) {
                             socket.emit("updatedEvent", updatedEvent)
+
+                        } else if (response.target.lenght == 'YYYY'.length) {
+
+                            const admissionYear = await User.findOne({
+                                "_id": userId
+                            }).admissionYear
+
+                            if (admissionYear == response.target) {
+                                socket.emit("updatedEvent", updatedEvent)
+                            }
                         }
                     }
-
                     break;
-
             }
         })
 
@@ -114,33 +115,34 @@ module.exports = function (socket, eventChangeStream, userId) {
                 let {
                     name,
                     description,
-                    startDatetime,
+                    startDt,
                     priority,
                     type,
                     notificationPeriod,
-                    info
+                    info,
+                    target
                 } = newEvent
                 priority = 2
-                type = 'huy'
+                type = 'project'
                 notificationPeriod = 2
 
-                const momentTime = moment(startDatetime)
-                startDatetime = new Date(momentTime.format().slice(0, -8) + '00').toISOString()
+                const momentTime = moment(startDt)
+                startDt = new Date(momentTime.format().slice(0, -8) + '00').toISOString()
 
                 const date = momentTime.add(notificationPeriod, 'days')
 
-                const nextNotifficationDatetime = new Date(date.format().slice(0, -8) + '00').toISOString()
+                const nextNotifficationDt = new Date(date.format().slice(0, -8) + '00').toISOString()
 
                 const event = new Event({
                     name: name,
                     description: description,
-                    startDatetime: startDatetime,
+                    startDt: startDt,
                     priority: priority,
                     type: type,
                     notificationPeriod: notificationPeriod,
                     info: info,
-                    nextNotifficationDatetime: nextNotifficationDatetime,
-                    owner: owner
+                    nextNotifficationDt: nextNotifficationDt,
+                    target: target
                 })
                 await event.save()
                 socket.emit('addEvent', 'Мероприятие успешно добавлено в систему!')
@@ -155,7 +157,7 @@ module.exports = function (socket, eventChangeStream, userId) {
                 await Event.deleteOne({
                     "_id": eventForDelete._id
                 })
-                socket.emit('deleteEvent', 'Событие успешно удалено')
+                socket.emit('deleteEvent', 'Мероприятие успешно удалено')
             } catch (e) {
                 socket.emit('deleteEvent', 'Ошибка!')
             }
@@ -169,13 +171,13 @@ module.exports = function (socket, eventChangeStream, userId) {
                 }, {
                     "name": eventForUpdate.name,
                     "description": eventForUpdate.description,
-                    "startDatetime": eventForUpdate.startDatetime,
+                    "startDt": eventForUpdate.startDt,
                     "priority": eventForUpdate.priority,
                     "type": eventForUpdate.type,
                     "notificationPeriod": eventForUpdate.notificationPeriod,
                     "info": eventForUpdate.info
                 })
-                socket.emit('updateEvent', 'Аспирант успешно изменен')
+                socket.emit('updateEvent', 'Мероприятие успешно изменено')
             } catch (e) {
                 socket.emit('updateEvent', 'Ошибка!')
             }

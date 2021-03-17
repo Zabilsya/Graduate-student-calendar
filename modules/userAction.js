@@ -1,10 +1,9 @@
 const User = require('./../models/User')
 
-module.exports = function(socket,userChangeStream){
+module.exports = function(socket, userChangeStream){
 
     var socket = socket
     var userChangeStream = userChangeStream
-
 
     this.subscribeToEvents = function() {
 
@@ -22,7 +21,7 @@ module.exports = function(socket,userChangeStream){
                         admissionYear: change.fullDocument.admissionYear
                     }
 
-                    if (userId == config.get('superuserId') || userId == newUser._id ){
+                    if (userId == config.get('superuserId') || userId == newUser._id.toString() ){
                         socket.emit("newUser", newUser);
                     }
 
@@ -37,20 +36,20 @@ module.exports = function(socket,userChangeStream){
                     break;
 
                 case "update":     
-                    const respone = await User.findOne({
+                    const response = await User.findOne({
                         "_id": change.documentKey._id
                     })
 
                     const updatedUser = {
-                        _id: respone._id,
-                        email: respone.email,
-                        name: respone.name,
-                        secondName: respone.secondName,
-                        thirdName: respone.thirdName,
-                        admissionYear: respone.admissionYear,
+                        _id: response._id,
+                        email: response.email,
+                        name: response.name,
+                        secondName: response.secondName,
+                        thirdName: response.thirdName,
+                        admissionYear: response.admissionYear,
                     }
 
-                    if (userId == config.get('superuserId') || userId == newUser._id ){
+                    if (userId == config.get('superuserId') || userId == newUser._id.toString() ){
                         socket.emit("updatedUser", updatedUser)
                     }            
                     
@@ -89,9 +88,8 @@ module.exports = function(socket,userChangeStream){
 
         socket.on('deleteUser', async (userForDelete) => {
             try {
-
                 await User.deleteOne({
-                    "email": userForDelete.email
+                    "id": userForDelete.documentKey._id
                 })
                 socket.emit('deleteUser', 'Аспирант успешно удален')
             } catch (e) {
@@ -104,7 +102,7 @@ module.exports = function(socket,userChangeStream){
             try {
 
                 await User.updateOne({
-                    "_id": userForUpdate._id
+                    "_id": userForUpdate.documentKey._id
                 }, {
                     "email": userForUpdate.email,
                     "name": userForUpdate.name,

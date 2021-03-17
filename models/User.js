@@ -9,4 +9,4 @@ const schema = new Schema({
     admissionYear: {type: Number, required: true}
 })
 
-module.exports = model('User',schema)
+module.exports = model('User', schema)
