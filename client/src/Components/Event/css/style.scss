@@ -2,6 +2,67 @@ $hseColor:#005bab;
 $white:#ffffff;
 $black:#000000;
 
+.event-wrapper {
+    transition: max-height .4s linear;
+}
+
+.form-floating { 
+    transition: max-height .4s linear;
+}
+
+.modal-buttons {
+    display: flex;
+    margin: 16px 0;
+    transition: max-height .4s linear;
+}
+
+
+.show {
+    max-height: 100%;
+
+    .form-floating {
+        max-height: calc(3.5rem + 2px);
+    }
+}
+
+.hide {
+    max-height: 0;
+    overflow: hidden;
+    
+    .form-floating {
+        max-height: 0;
+    }
+}
+
+.event-line {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    text-align: center;
+    height: 50px;
+    margin-bottom: 12px;
+    border-radius: 12px;
+
+    .arrow {
+      width: 16px;
+      height: 16px;
+      border-top: 4px solid $black;
+      border-right: 4px solid $black;
+      margin-right: 16px;
+      transition: all .4s linear;
+    }
+
+    .top {
+        transform: rotate(-45deg);
+        margin-top: 10px;
+    }
+
+    .down {
+        transform: rotate(135deg);
+    }
+}
+
+
 .data {
     display: flex;
     justify-content: space-around;

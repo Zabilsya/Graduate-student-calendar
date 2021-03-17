@@ -43,6 +43,10 @@
   font-size: 14px;
 }
 
+.day .events .event {
+  border: 1px solid #000000;
+}
+
 .day .current {
   background-color: #ff0000;
 }

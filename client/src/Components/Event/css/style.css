@@ -1,3 +1,76 @@
+.event-wrapper {
+  -webkit-transition: max-height .4s linear;
+  transition: max-height .4s linear;
+}
+
+.form-floating {
+  -webkit-transition: max-height .4s linear;
+  transition: max-height .4s linear;
+}
+
+.modal-buttons {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  margin: 16px 0;
+  -webkit-transition: max-height .4s linear;
+  transition: max-height .4s linear;
+}
+
+.show {
+  max-height: 100%;
+}
+
+.show .form-floating {
+  max-height: calc(3.5rem + 2px);
+}
+
+.hide {
+  max-height: 0;
+  overflow: hidden;
+}
+
+.hide .form-floating {
+  max-height: 0;
+}
+
+.event-line {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: justify;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  text-align: center;
+  height: 50px;
+  margin-bottom: 12px;
+  border-radius: 12px;
+}
+
+.event-line .arrow {
+  width: 16px;
+  height: 16px;
+  border-top: 4px solid #000000;
+  border-right: 4px solid #000000;
+  margin-right: 16px;
+  -webkit-transition: all .4s linear;
+  transition: all .4s linear;
+}
+
+.event-line .top {
+  -webkit-transform: rotate(-45deg);
+          transform: rotate(-45deg);
+  margin-top: 10px;
+}
+
+.event-line .down {
+  -webkit-transform: rotate(135deg);
+          transform: rotate(135deg);
+}
+
 .data {
   display: -webkit-box;
   display: -ms-flexbox;

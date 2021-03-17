@@ -22,17 +22,17 @@ export const CalendarDay = ({day, dayEvents, isCurrentDay, isSelectedMonth}) => 
         if (dayEvents.length === 0) {
             return ''
         }
-        if (dayEvents.length <= 3) {
+        if (dayEvents.length <= 2) {
             return dayEvents.map(event => (
-                <div className="event" style={{background:eventTypes['Конференция']}}>
+                <div className="event" style={{background: eventTypes[event.type]}}>
                     {event.name}
                 </div>))
         }
         let temp = 0
             return dayEvents.map(event => {
                 temp++
-                if (temp > 3) return
-                return <div className="event">{event.name}</div>
+                if (temp > 2) return
+                return <div className="event" style={{background: eventTypes[event.type]}}>{event.name}</div>
             })
         }
 

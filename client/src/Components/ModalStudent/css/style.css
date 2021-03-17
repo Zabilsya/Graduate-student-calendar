@@ -28,7 +28,7 @@
   background: white;
   position: relative;
   margin: 0 20px;
-  max-height: calc(100vh - 350px);
+  max-height: calc(100vh - 250px);
   text-align: left;
   display: -webkit-box;
   display: -ms-flexbox;
@@ -61,7 +61,7 @@
 }
 
 .overlay .modal-body {
-  overflow: auto;
+  overflow-y: scroll;
 }
 
 .overlay .modal-title {

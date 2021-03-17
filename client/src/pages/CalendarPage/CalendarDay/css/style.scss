@@ -1,5 +1,6 @@
 $red:#ff0000;
 $white:#ffffff;
+$black:#000000;
 
 .day {
     position: relative;
@@ -35,6 +36,10 @@ $white:#ffffff;
         transform: translateX(-50%);
         text-align: center;
         font-size: 14px;
+
+        .event {
+            border: 1px solid $black;
+        }
     }
 
     .current {

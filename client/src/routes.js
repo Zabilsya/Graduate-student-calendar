@@ -16,7 +16,7 @@ export const useRoutes = (isAuthenticated, userId) => {
                 <Route path="/personalInfo" exact>
                     <PersonalInfoPage />
                 </Route>
-                {userId &&
+                {userId === '604fb74012c7d21c984aed35' &&
                     <Route path="/postgraduatesInfo" exact>
                         <PostgraduatesInfoPage />
                     </Route>
