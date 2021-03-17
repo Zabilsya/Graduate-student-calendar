@@ -59,7 +59,6 @@ router.post('/login',
         check('password','Введите пароль').exists()
     ],
     async (req, res) => {
-        console.log(req.body)
         try {
             const errors = validationResult(req)
 
@@ -71,12 +70,14 @@ router.post('/login',
             }
 
             const{email,password} = req.body
+           
             const user = await User.findOne({email})
-
+            
             if (!user){
-                res.status(400).json({message: 'Пользователь не найден'})
+                console.log(user)
+                return res.status(400).json({message: 'Пользователь не найден'})
             }
-
+            
             const isMatch = await bcrypt.compare(password,user.password)
 
             if(!isMatch){
@@ -89,10 +90,10 @@ router.post('/login',
                 {expiresIn: '1h'}
             )
 
-            res.json({token,userId:user.id})
+            return res.json({token,userId:user.id})
 
         } catch (e) {
-            response.status(500).json({message: "Ошибка! Попробуйте снова"})
+            return res.status(500).json({message: "Ошибка! Попробуйте снова"})
         }
 })
 
