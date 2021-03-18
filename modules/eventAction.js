@@ -1,24 +1,26 @@
 const moment = require('moment')
 const Event = require('./../models/Event')
 const User = require('./../models/User')
+const Notification = require('./../models/Notification')
 const config = require('config')
 
 
 module.exports = function (socket, eventChangeStream, userId) {
 
-    // const socket = socket
-    // const eventChangeStream = eventChangeStream
-    // const userId = userId
+    let newNotification
+    let createDt
 
     this.subscribeToEvents = function () {
 
         eventChangeStream.on("change", async (change) => {
 
+            const eventId = change.fullDocument._id
+
             switch (change.operationType) {
                 case "insert":
 
                     const newEvent = {
-                        _id: change.fullDocument._id,
+                        _id: eventId,
                         name: change.fullDocument.name,
                         description: change.fullDocument.description,
                         startDt: change.fullDocument.startDt,
@@ -45,6 +47,20 @@ module.exports = function (socket, eventChangeStream, userId) {
                         }
                     }
 
+
+                    // create notification
+                    createDt = new Date(moment().format().slice(0, -8) + '00').toISOString()
+
+                    newNotification = {
+                        target: change.fullDocument.target,
+                        eventId: eventId,
+                        eventName: change.fullDocument.name,
+                        createDt: createDt,
+                        type: 'insert',
+                        daysLeft: null
+                    }
+                    await newNotification.save()
+
                     break;
 
                 case "delete":
@@ -64,45 +80,52 @@ module.exports = function (socket, eventChangeStream, userId) {
                         }
                     }
                     socket.emit("deletedEvent", change.documentKey._id);
+
+
+
                     break;
 
 
                 case "update":
 
-                    if (change.updateDescription.updatedFields.nextNotifficationDt && Object.keys(change.updateDescription.updatedFields).length == 1) {
-                         break;
+                    const updatedNextNotificationDt = change.updateDescription.updatedFields.nextNotifficationDt
+                    const countUpdatedAttrs = Object.keys(change.updateDescription.updatedFields).length
+                    const isCron = updatedNextNotificationDt && countUpdatedAttrs == 1
+
+                    if (isCron) {
+                        break;
                     }
 
-                        const response = await Event.findOne({
-                            "_id": change.documentKey._id
-                        })
+                    const response = await Event.findOne({
+                        "_id": eventId
+                    })
 
 
-                        const updatedEvent = {
-                            _id: response._id,
-                            name: response.name,
-                            description: response.description,
-                            startDt: response.startDt,
-                            priority: response.priority,
-                            type: response.type,
-                            notificationPeriod: response.notificationPeriod,
-                            info: response.info,
-                            target: response.target
-                        }
-                        if (userId == config.get('superuserId') || (userId == response.target)) {
+                    const updatedEvent = {
+                        _id: response._id,
+                        name: response.name,
+                        description: response.description,
+                        startDt: response.startDt,
+                        priority: response.priority,
+                        type: response.type,
+                        notificationPeriod: response.notificationPeriod,
+                        info: response.info,
+                        target: response.target
+                    }
+                    if (userId == config.get('superuserId') || (userId == response.target)) {
 
+                        socket.emit("updatedEvent", updatedEvent)
+
+                    } else if (response.target.lenght == 'YYYY'.length) {
+
+                        const admissionYear = await User.findOne({
+                            "_id": userId
+                        }).admissionYear
+
+                        if (admissionYear == response.target) {
                             socket.emit("updatedEvent", updatedEvent)
-
-                        } else if (response.target.lenght == 'YYYY'.length) {
-
-                            const admissionYear = await User.findOne({
-                                "_id": userId
-                            }).admissionYear
-
-                            if (admissionYear == response.target) {
-                                socket.emit("updatedEvent", updatedEvent)
-                            }
                         }
+                    }
                     break;
             }
         })
@@ -123,7 +146,7 @@ module.exports = function (socket, eventChangeStream, userId) {
                 priority = 2
                 type = 'project'
                 notificationPeriod = 2
-    
+
                 const momentTime = moment(startDt)
                 startDt = new Date(momentTime.format().slice(0, -8) + '00').toISOString()
 
@@ -142,7 +165,7 @@ module.exports = function (socket, eventChangeStream, userId) {
                     nextNotifficationDt: nextNotifficationDt,
                     target: target
                 })
-                
+
                 await event.save()
                 socket.emit('addEvent', 'Мероприятие успешно добавлено в систему!')
             } catch (e) {
@@ -152,9 +175,30 @@ module.exports = function (socket, eventChangeStream, userId) {
 
         socket.on('deleteEvent', async (eventForDelete) => {
             try {
+                const eventId = eventForDelete._id
+
+                // delete all notifications
+                await Notification.deleteMany({
+                    "eventId": eventId
+                })
+
+
+                // create notification about deletion
+                const createDt = new Date(moment().format().slice(0, -8) + '00').toISOString()
+                newNotification = {
+                    target: eventForDelete.target,
+                    eventId: eventId,
+                    eventName: change.fullDocument.name,
+                    createDt: createDt,
+                    type: 'delete',
+                    daysLeft: null
+                }
+
+                await newNotification.save()
+
 
                 await Event.deleteOne({
-                    "_id": eventForDelete._id
+                    "_id": eventId
                 })
                 socket.emit('deleteEvent', 'Мероприятие успешно удалено')
             } catch (e) {
@@ -180,12 +224,11 @@ module.exports = function (socket, eventChangeStream, userId) {
                 current.type == eventForUpdate.type &&
                 current.notificationPeriod == eventForUpdate.notificationPeriod &&
                 current.info == eventForUpdate.info) {
-                    socket.emit('updateEvent', 'Вы не внесли никаких изменений')
-                    return
-                }
+                socket.emit('updateEvent', 'Вы не внесли никаких изменений')
+                return
+            }
 
             try {
-
                 await Event.updateOne({
                     "_id": eventForUpdate._id
                 }, {
@@ -200,6 +243,28 @@ module.exports = function (socket, eventChangeStream, userId) {
                     "target": eventForUpdate.target
                 })
                 socket.emit('updateEvent', 'Мероприятие успешно изменено')
+
+                // Удалить уведомление об апдейте
+                Notification.deleteOne({
+                    "eventId": eventForUpdate._id,
+                    "type": "update"
+                })
+
+
+                // Создать новое уведомление об апдейте
+                const createDt = new Date(moment().format().slice(0, -8) + '00').toISOString()
+
+                newNotification = {
+                    target: eventForUpdate.target,
+                    eventId: eventForUpdate._id,
+                    eventName: eventForUpdate.name,
+                    createDt: createDt,
+                    type: 'update',
+                    daysLeft: null
+                }
+
+                await newNotification.save()
+
             } catch (e) {
                 socket.emit('updateEvent', 'Ошибка!')
             }
@@ -220,10 +285,10 @@ module.exports = function (socket, eventChangeStream, userId) {
 
                     userEvents = await Event.find({
                         $or: [{
-                                "owner": admissionYear
+                                "target": admissionYear
                             },
                             {
-                                "owner": userId
+                                "target": userId
                             }
                         ]
                     })

@@ -4,31 +4,30 @@ const {
 } = require('mongoose')
 
 const schema = new Schema({
-    email: {
-        type: String,
-        required: true,
-        unique: true
-    },
-    password: {
+    target: {
         type: String,
         required: true
     },
-    name: {
+    eventId: {
         type: String,
         required: true
     },
-    secondName: {
+    eventName: {
         type: String,
         required: true
     },
-    thirdName: {
-        type: String,
-        required: false
+    createDt: {
+        type: Date,
+        required: true
     },
-    admissionYear: {
+    type: {
+        type: String,
+        required: true
+    },
+    daysLeft: {
         type: Number,
-        required: true
+        required: false
     }
 })
 
-module.exports = model('User', schema)
+module.exports = model('Notification', schema)

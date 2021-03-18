@@ -3,12 +3,12 @@ const config = require('config')
 const bcrypt = require('bcryptjs')
 
 
-module.exports = function(socket, userChangeStream, userId){
+module.exports = function (socket, userChangeStream, userId) {
 
-    this.subscribeToEvents = function() {
+    this.subscribeToEvents = function () {
 
         userChangeStream.on("change", async (change) => {
-    
+
             switch (change.operationType) {
                 case "insert":
                     const newUser = {
@@ -27,16 +27,16 @@ module.exports = function(socket, userChangeStream, userId){
                     break;
 
                 case "delete":
-                    
+
                     if (userId == config.get('superuserId')) {
-                        
+
                         socket.emit("deletedUser", change.documentKey._id);
                     }
-                    
+
                     break;
 
                 case "update":
-    
+
                     const response = await User.findOne({
                         "_id": change.documentKey._id
                     })
@@ -50,10 +50,10 @@ module.exports = function(socket, userChangeStream, userId){
                         admissionYear: response.admissionYear,
                     }
 
-                    if (userId == config.get('superuserId') || userId == newUser._id.toString() ){
+                    if (userId == config.get('superuserId') || userId == newUser._id.toString()) {
                         socket.emit("updatedUser", updatedUser)
-                    }            
-                    
+                    }
+
                     break;
 
             }
@@ -88,7 +88,7 @@ module.exports = function(socket, userChangeStream, userId){
 
 
         socket.on('deleteUser', async (userForDelete) => {
-          
+
             try {
                 await User.deleteOne({
                     "_id": userForDelete._id
@@ -106,15 +106,15 @@ module.exports = function(socket, userChangeStream, userId){
                 "_id": userForUpdate._id
             })
 
-            if (current.email == userForUpdate.email && 
-                current.name == userForUpdate.name && 
-                current.secondName == userForUpdate.secondName && 
+            if (current.email == userForUpdate.email &&
+                current.name == userForUpdate.name &&
+                current.secondName == userForUpdate.secondName &&
                 current.thirdName == userForUpdate.thirdName &&
                 current.admissionYear == userForUpdate.admissionYear) {
-                    socket.emit('updateUser', 'Вы не внесли никаких изменений')
-                    return
-                }
-           
+                socket.emit('updateUser', 'Вы не внесли никаких изменений')
+                return
+            }
+
             try {
                 await User.updateOne({
                     "_id": userForUpdate._id
@@ -132,10 +132,10 @@ module.exports = function(socket, userChangeStream, userId){
         })
     }
 
-    this.getUser = function(){
+    this.getUser = function () {
 
         if (userId == config.get('superuserId')) {
-            
+
             socket.on('getUsers', async () => {
                 try {
                     const usersAll = await User.find()
@@ -145,8 +145,7 @@ module.exports = function(socket, userChangeStream, userId){
                 }
             })
 
-        }
-        else {
+        } else {
             socket.on('getUsers', async () => {
                 try {
                     const usersAll = await User.findOne({
@@ -158,7 +157,7 @@ module.exports = function(socket, userChangeStream, userId){
                 }
             })
         }
-        
+
     }
 
 }
