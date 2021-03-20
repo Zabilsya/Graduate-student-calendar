@@ -24,7 +24,7 @@ export const CalendarDay = ({day, dayEvents, isCurrentDay, isSelectedMonth, even
         }
         if (dayEvents.length <= 2) {
             return dayEvents.map(event => (
-                <div className="event" style={{background: eventTypes[event.type]}}>
+                <div className="event" style={{background: eventTypes[event.type]}} key={event._id}>
                     {event.name}
                 </div>))
         }
@@ -32,13 +32,13 @@ export const CalendarDay = ({day, dayEvents, isCurrentDay, isSelectedMonth, even
             return dayEvents.map(event => {
                 temp++
                 if (temp > 2) return
-                return <div className="event" style={{background: eventTypes[event.type]}}>{event.name}</div>
+                return <div className="event" style={{background: eventTypes[event.type]}} key={event._id}>{event.name}</div>
             })
         }
 
     return (
         <>
-            <div className="day" onClick={isSelectedMonth(day) ? openModal : ''} key={day.unix()}>
+            <div className="day" onClick={isSelectedMonth(day) ? openModal : () => {}} key={day.unix()}>
                 <div className={isCurrentDay(day) ? "number-wrapper current" : "number-wrapper"}>
                     <div className={isSelectedMonth(day) ? "number" : "number not-current"}>
                         {day.format('D')}

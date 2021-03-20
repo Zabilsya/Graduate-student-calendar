@@ -23,6 +23,9 @@ const UserAction = require('./modules/userAction')
 const Event = require('./models/Event')
 const EventAction = require('./modules/eventAction')
 
+const Notification = require('./models/Notification')
+const NotificationActions = require('./modules/notificationActions')
+
 // Создать БД и реализовать подключение к ней
 async function start() {
     try {
@@ -41,6 +44,7 @@ async function start() {
 
         const userChangeStream = User.watch();
         const eventChangeStream = Event.watch();
+        const notificationChangeStream = Notification.watch();
 
         io.sockets.on('connection', socket => {
 
@@ -57,6 +61,10 @@ async function start() {
                         eventAction.subscribeToEvents()
                         eventAction.getEvents()
 
+                        var notificationAction = new NotificationActions(socket, notificationChangeStream, userId)
+
+                        notificationAction.subscribeToNotifications()
+                        notificationAction.getNotifications()
                     })
 
             

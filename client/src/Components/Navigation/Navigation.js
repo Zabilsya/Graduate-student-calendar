@@ -1,10 +1,12 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import { NavLink, useHistory } from 'react-router-dom'
+import { AuthContext } from '../../context/AuthContext'
 
 import './css/style.css'
 
-export const Navigation = ({userId}) => {
+export const Navigation = () => {
     const history = useHistory()
+    const {userId} = useContext(AuthContext)
 
     const makeActive = event => {
         

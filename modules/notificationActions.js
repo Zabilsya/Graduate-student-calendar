@@ -9,19 +9,19 @@ const Notification = require('./../models/Notification')
 
 
 
-module.exports = function (socket, eventChangeStream, userId) {
+module.exports = function (socket, notificationChangeStream, userId) {
 
     // userId - id юзера, который прямо сейчас зашел на сайт
 
     this.subscribeToNotifications = function () {
 
-        eventChangeStream.on("change", async (change) => {
+        notificationChangeStream.on("change", async (change) => {
 
             switch (change.operationType) {
                 case "insert":
 
                     const newNotification = {
-                        _id: change.fullDocument._id,
+                        _id: change.documentKey._id,
                         target: change.fullDocument.target,
                         eventId: change.fullDocument.eventId,
                         eventName: change.fullDocument.eventName,
@@ -55,21 +55,20 @@ module.exports = function (socket, eventChangeStream, userId) {
             let userNotifications
 
             try {
-
-                if (userId != config.get('superuserId')) {
+                // Тут нужно будет изменить условие на !=
+                if (userId == config.get('superuserId')) {
 
                     const admissionYear = await User.findOne({
                         "_id": userId
                     }).admissionYear
 
-
                     userNotifications = await Notification.find({
                         $or: [{
-                                "target": admissionYear
-                            },
-                            {
-                                "target": userId
-                            }
+                            "target": admissionYear
+                        },
+                        {
+                            "target": userId
+                        }
                         ]
                     })
 
@@ -81,6 +80,4 @@ module.exports = function (socket, eventChangeStream, userId) {
             }
         })
     }
-
-
 }

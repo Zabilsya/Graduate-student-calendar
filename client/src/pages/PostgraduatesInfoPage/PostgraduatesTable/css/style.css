@@ -1,1 +1,65 @@
-/* No CSS *//*# sourceMappingURL=style.css.map */
+.main-table-header {
+  width: 75%;
+  text-align: center;
+  padding: 0;
+}
+
+.main-table-header .table-header {
+  width: 100%;
+  table-layout: fixed !important;
+}
+
+.main-table-header .table-header th {
+  width: 9%;
+  padding: 0;
+  border-right: 1px solid #000000;
+}
+
+.main-table-header .table-header th:nth-child(1) {
+  width: 2%;
+  border-left: 1px solid #000000;
+}
+
+.main-table-header .table-header th:nth-child(5) {
+  width: 13%;
+}
+
+.main-table-header .table-header th:nth-child(6) {
+  width: 4%;
+  font-size: 14px;
+}
+
+.main-table-wrapper {
+  width: 76%;
+  height: 600px;
+  overflow-y: auto;
+}
+
+.main-table-wrapper .table {
+  width: 100%;
+  table-layout: fixed !important;
+  border-color: #000000;
+}
+
+.main-table-wrapper .table .student-info:hover {
+  background-color: yellow;
+}
+
+.main-table-wrapper .table .student-info-item {
+  overflow: auto;
+  cursor: pointer;
+  width: 9%;
+}
+
+.main-table-wrapper .table .student-info-item:nth-child(1) {
+  width: 2%;
+}
+
+.main-table-wrapper .table .student-info-item:nth-child(5) {
+  width: 13%;
+}
+
+.main-table-wrapper .table .student-info-item:nth-child(6) {
+  width: 4%;
+}
+/*# sourceMappingURL=style.css.map */

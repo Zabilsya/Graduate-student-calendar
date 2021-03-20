@@ -12,7 +12,7 @@ module.exports = function (socket, userChangeStream, userId) {
             switch (change.operationType) {
                 case "insert":
                     const newUser = {
-                        _id: change.fullDocument._id,
+                        _id: change.documentKey._id,
                         email: change.fullDocument.email,
                         name: change.fullDocument.name,
                         secondName: change.fullDocument.secondName,
@@ -151,7 +151,7 @@ module.exports = function (socket, userChangeStream, userId) {
                     const usersAll = await User.findOne({
                         "_id": userId
                     })
-                    socket.emit('getUsers', usersAll)
+                    socket.emit('getUsers', [usersAll])
                 } catch (e) {
                     socket.emit('getUsers', 'Ошибка!')
                 }

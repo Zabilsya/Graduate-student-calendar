@@ -1,0 +1,69 @@
+.main-table-header {
+    width: 75%;
+    text-align: center;
+    padding: 0;
+
+    .table-header {
+        width: 100%;
+        table-layout: fixed !important;
+
+    th {
+        width: 9%;
+        padding: 0;
+        border-right: 1px solid #000000;
+    }
+
+    th:nth-child(1) {
+        width: 2%;
+        border-left: 1px solid #000000;
+    }
+
+    th:nth-child(5) {
+        width: 13%;
+    }
+
+    th:nth-child(6) {
+        width: 4%;
+        font-size: 14px;
+    }
+    }
+
+}
+
+.main-table-wrapper {
+    width: 76%;
+    height: 600px;
+    overflow-y: auto;
+
+    .table {
+        width: 100%;
+        table-layout: fixed !important;
+        border-color: #000000;
+
+        .student-info {
+
+            &:hover {
+                background-color: yellow;
+            }
+
+            &-item {
+                overflow: auto;
+                cursor: pointer;
+                width: 9%;
+            }
+
+            &-item:nth-child(1) {
+                width: 2%;
+            }
+    
+            &-item:nth-child(5) {
+                width: 13%;
+            }
+    
+            &-item:nth-child(6) {
+                width: 4%;
+            }
+
+        }
+    }
+}

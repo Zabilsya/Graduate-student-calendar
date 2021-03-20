@@ -1,4 +1,4 @@
-import { useCallback, useContext } from 'react'
+import { useContext } from 'react'
 import { ScheduleContext } from '../context/ScheduleContext'
 
 export const useRequest = (transmittedSocket = null) => {
