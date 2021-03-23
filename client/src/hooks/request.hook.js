@@ -1,9 +1,6 @@
 import { useContext } from 'react'
 import { ScheduleContext } from '../context/ScheduleContext'
-// import { toast } from 'react-toastify'
-// import 'react-toastify/dist/ReactToastify.css'
 
-// toast.configure()
 
 export const useRequest = (transmittedSocket = null) => {
     let {socket} = useContext(ScheduleContext)
@@ -24,9 +21,6 @@ export const useRequest = (transmittedSocket = null) => {
                 return
             }
             window.M.toast({html: response, classes: "message", displayLength: 2000})
-            // toast.error(response, {
-            //     autoClose: false
-            // })
         })
         return answer
     }

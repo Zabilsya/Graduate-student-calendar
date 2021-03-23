@@ -142,13 +142,12 @@ module.exports = function (socket, eventChangeStream, userId) {
                     target
                 } = newEvent
                 priority = 2
-                type = 'project'
-                notificationPeriod = 2
-
+                console.log(newEvent)
+                const notPeriod = Number(notificationPeriod)
                 const momentTime = moment(startDt)
                 startDt = new Date(momentTime.format().slice(0, -8) + '00').toISOString()
 
-                const date = momentTime.add(notificationPeriod, 'days')
+                const date = momentTime.add(notPeriod, 'days')
 
                 const nextNotifficationDt = new Date(date.format().slice(0, -8) + '00').toISOString()
 
@@ -158,7 +157,7 @@ module.exports = function (socket, eventChangeStream, userId) {
                     startDt: startDt,
                     priority: priority,
                     type: type,
-                    notificationPeriod: notificationPeriod,
+                    notificationPeriod: notPeriod,
                     info: info,
                     nextNotifficationDt: nextNotifficationDt,
                     target: target

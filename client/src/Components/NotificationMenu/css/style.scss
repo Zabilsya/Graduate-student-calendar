@@ -15,7 +15,32 @@ $hseColor:#005bab;
     transition: all .3s linear;
 
     .notification {
+        position: relative;
         height: 20%;
+        border-bottom: 1px solid #000000;
+        overflow: hidden;
+
+        &-time {
+            position: absolute;
+            top: 0;
+            right: 2px;
+        }
+
+        &-message {
+            position: absolute;
+            top: 26px;
+            left: 20px;
+            font-style: oblique;
+        }
+
+        &-event {
+            position: absolute;
+            top: 57px;
+            left: 20px;
+            max-width: 300px;
+            font-size: 20px;
+            font-weight: 700;
+        }
     }
 }
 

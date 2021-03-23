@@ -5,8 +5,7 @@ import { ModalStudent } from '../../Components/ModalStudent/ModalStudent'
 import './css/style.css'
 import { useStudents } from '../../hooks/students.hook'
 
-export const PostgraduatesInfoPage = () => {
-    const { students, chosenStudent, setChosenStudent } = useStudents()
+export const PostgraduatesInfoPage = ({students, chosenStudent, setChosenStudent}) => {
     const [isOpenModal, setIsOpenModal] = useState(false)
     const [modalInfo, setModalInfo] = useState({
         data: '', title: '', buttonText: ''
@@ -46,11 +45,13 @@ export const PostgraduatesInfoPage = () => {
             <div className="content-elements">
                 <PostgraduatesTable students={students} chooseStudent={chooseStudent} chosenStudent={chosenStudent}/>
             </div>
-            <div>
-                <button type="button" id="" onClick={editStudent}>Редактировать информацию об аспиранте</button>
-                <button type="button" onClick={addStudent}>Добавить аспиранта</button>
-                <button type="button"onClick={deleteStudent}>Удалить аспиранта</button>
-            </div>
+            {students.length > 0 && 
+                <div className="buttons">
+                    <button type="button" className="button" onClick={editStudent}>Редактировать информацию об аспиранте</button>
+                    <button type="button" className="button" onClick={addStudent}>Добавить аспиранта</button>
+                    <button type="button" className="button" onClick={deleteStudent}>Удалить аспиранта</button>
+                </div>
+            }
             {isOpenModal && 
                 <ModalStudent modalInfo={modalInfo} onClose={closeModal}/>
             }

@@ -1,0 +1,36 @@
+$hseColor:#005bab;
+$white:#ffffff;
+$black:#000000;
+
+.info {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    .buttons {
+        display: flex;
+        height: 240px;
+        flex-direction: column;
+        justify-content: space-around;
+        margin-left: 20px;
+
+        .button {
+            display: block;
+            width: 330px;
+            padding: 12px;
+            border-radius: 10px;
+            margin: 0 auto;
+            background-color: $white;
+            border: 1px solid $hseColor;
+            color: $hseColor;
+            font-weight: 700;
+            text-align: center;
+            transition: all .2s linear;
+    
+            &:hover {
+                background-color: $hseColor;
+                color: $white;
+            }
+        }
+    }
+}

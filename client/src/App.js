@@ -17,7 +17,6 @@ function App() {
   const isAuthenticated = !!token
 
   const events = useSchedule(socket)
-  const notifications = useNotifications(socket)
   const routes = useRoutes(isAuthenticated, userId)
 
   return (
@@ -25,7 +24,7 @@ function App() {
       token, login, logout, userId, isAuthenticated
     }}>
       <ScheduleContext.Provider value={{socket, events}}>
-      {isAuthenticated && <NotificationMenu notifications={notifications}/>}
+      {isAuthenticated && <NotificationMenu userId={userId} socket={socket}/>}
         <BrowserRouter>
           {isAuthenticated && <Navigation/>}
           <div className="container">

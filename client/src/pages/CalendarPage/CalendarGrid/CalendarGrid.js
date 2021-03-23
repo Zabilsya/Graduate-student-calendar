@@ -5,7 +5,6 @@ import {CalendarDay} from './../CalendarDay/CalendarDay'
 import './css/style.css'
 
 export const CalendarGrid = ({ startDay, today, events, eventTarget }) => {
-    console.log(events)
     const filteredEvents = events.filter(event => event.startDt.isSame(today, 'month'))
     const totalDays = 42
     const day = startDay.clone().subtract(1, 'day')
