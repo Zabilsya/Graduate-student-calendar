@@ -2,10 +2,38 @@ const User = require('./../models/User')
 const config = require('config')
 const bcrypt = require('bcryptjs')
 
+const nodemailer = require('nodemailer') 
+
 
 module.exports = function (socket, userChangeStream, userId) {
 
     this.subscribeToEvents = function () {
+
+        function sendPassword(generatedPassword,userEmail,name) {
+            
+            let transporter = nodemailer.createTransport({
+                service: 'gmail',
+                auth: {
+                    user: config.email,
+                    pass: config.emailPass
+                }
+            })
+
+            let mailOptions = {
+                from: config.email,
+                to: userEmail,
+                subject: 'Пароль',
+                text: `Ваш пароль: ${generatedPassword}`
+            }
+
+            transporter.sendMail(mailOptions, function(err,data){
+                if(err){
+                    console.log('Ошибка',err)
+                }else{
+                    console.log('Письмо отправлено')
+                }
+            })
+        }
 
         userChangeStream.on("change", async (change) => {
 
@@ -68,7 +96,8 @@ module.exports = function (socket, userChangeStream, userId) {
                     thirdName,
                     admissionYear
                 } = newUser
-                const randomstring = Math.random().toString(36).slice(-8);
+                const randomstring = Math.random().toString(36).slice(-8)
+                sendPassword(randomstring,email,name)                
                 console.log(randomstring)
                 const hashedPassword = await bcrypt.hash(randomstring, 12)
                 const user = new User({
@@ -80,6 +109,7 @@ module.exports = function (socket, userChangeStream, userId) {
                     password: hashedPassword
                 })
                 await user.save()
+
                 socket.emit('addUser', 'Аспирант успешно добавлен в систему!')
             } catch (e) {
                 socket.emit('addUser', 'Ошибка!')
