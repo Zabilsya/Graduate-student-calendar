@@ -6,6 +6,9 @@ const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
 const moment = require('moment')
 
+const cron = require('node-cron')
+let shell = require('shelljs')
+
 const app = express()
 const server = require('http').Server(app)
 const io = require('socket.io')(server)
@@ -26,9 +29,14 @@ const EventAction = require('./modules/eventAction')
 const Notification = require('./models/Notification')
 const NotificationActions = require('./modules/notificationActions')
 
-// Создать БД и реализовать подключение к ней
+
 async function start() {
     try {
+
+        
+        
+
+      
 
         var date = moment().format('D.M.Y')
         var time = moment().format('H:mm')
@@ -42,6 +50,19 @@ async function start() {
             useCreateIndex: true
         })
 
+        
+
+        // cron.schedule('* * * * *', function(){
+    
+        //     console.log('Scheduler running...')
+            
+        //     if(shell.exec('node modules/cronAction.js').code !== 0){
+        //         console.log('Something went wrong')
+        //     }
+        
+        // })
+
+
         const userChangeStream = User.watch();
         const eventChangeStream = Event.watch();
         const notificationChangeStream = Notification.watch();
@@ -49,7 +70,6 @@ async function start() {
         io.sockets.on('connection', socket => {
 
                     socket.on('enter', userId => {
-
 
                         var userAction = new UserAction(socket, userChangeStream, userId)
 
@@ -66,11 +86,6 @@ async function start() {
                         notificationAction.subscribeToNotifications()
                         notificationAction.getNotifications()
                     })
-
-            
-
-
-
         })
     } catch (e) {
         console.log('Server Error', e.message)
