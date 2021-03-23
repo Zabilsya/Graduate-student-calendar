@@ -16,7 +16,8 @@ export const NotificationMenu = ({notifications}) => {
             <div className={showMenu ? "notification-menu menu-open" : "notification-menu"}>
                 {
                     notifications.map((item, index) => (
-                        <div className="notification" key={index}> 
+                        <div className="notification" key={index}>
+                            <div className="notification-time">{item.item}</div>
                             {item.eventName}
                         </div>
                     ))

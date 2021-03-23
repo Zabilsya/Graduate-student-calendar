@@ -1,24 +1,35 @@
 .event-wrapper {
-  -webkit-transition: max-height .4s linear;
-  transition: max-height .4s linear;
+  -webkit-transition: max-height .3s linear;
+  transition: max-height .3s linear;
+  width: 94%;
+  margin: 0 auto;
+}
+
+.event-wrapper .label {
+  opacity: .65;
+  font-size: 14px;
+  padding-left: 14px;
 }
 
 .form-floating {
-  -webkit-transition: max-height .4s linear;
-  transition: max-height .4s linear;
+  -webkit-transition: max-height .3s linear;
+  transition: max-height .3s linear;
+}
+
+.form-floating .description {
+  resize: none;
 }
 
 .modal-buttons {
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
-  margin: 16px 0;
-  -webkit-transition: max-height .4s linear;
-  transition: max-height .4s linear;
+  margin-top: 16px 0;
 }
 
 .show {
-  max-height: 100%;
+  max-height: 500px;
+  margin-bottom: 30px;
 }
 
 .show .form-floating {
@@ -45,9 +56,12 @@
       -ms-flex-align: center;
           align-items: center;
   text-align: center;
+  font-weight: 700;
   height: 50px;
   margin-bottom: 12px;
   border-radius: 12px;
+  padding-left: 5px;
+  cursor: pointer;
 }
 
 .event-line .arrow {
@@ -56,8 +70,8 @@
   border-top: 4px solid #000000;
   border-right: 4px solid #000000;
   margin-right: 16px;
-  -webkit-transition: all .4s linear;
-  transition: all .4s linear;
+  -webkit-transition: all .3s linear;
+  transition: all .3s linear;
 }
 
 .event-line .top {
@@ -71,11 +85,48 @@
           transform: rotate(135deg);
 }
 
+.select {
+  margin-bottom: 1rem !important;
+}
+
+.select .custom-select {
+  display: block;
+  width: 100%;
+  height: 40px;
+  padding-left: 9px;
+}
+
+.select label {
+  opacity: .65;
+  font-size: 14px;
+  padding-left: 14px;
+}
+
 .data {
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
   -ms-flex-pack: distribute;
       justify-content: space-around;
+  height: calc(3.5rem + 2px);
+}
+
+.data .low .form-check-input:checked {
+  background-color: green;
+  border-color: green;
+}
+
+.data .medium .form-check-input:checked {
+  background-color: yellow;
+  border-color: yellow;
+}
+
+.data .high .form-check-input:checked {
+  background-color: red;
+  border-color: red;
+}
+
+.priority {
+  margin-bottom: 0 !important;
 }
 /*# sourceMappingURL=style.css.map */

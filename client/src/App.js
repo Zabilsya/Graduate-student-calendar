@@ -7,9 +7,10 @@ import { AuthContext } from './context/AuthContext'
 import { ScheduleContext } from './context/ScheduleContext'
 import { useSchedule } from './hooks/schedule.hook'
 import { NotificationMenu } from './Components/NotificationMenu/NotificationMenu'
+import { useNotifications } from './hooks/notification.hook'
 
 import './style.css'
-import { useNotifications } from './hooks/notification.hook'
+import 'materialize-css'
 
 function App() {
   const { socket, token, login, logout, userId } = useAuth()

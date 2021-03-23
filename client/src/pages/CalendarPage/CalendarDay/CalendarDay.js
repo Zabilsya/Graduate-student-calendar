@@ -49,7 +49,7 @@ export const CalendarDay = ({day, dayEvents, isCurrentDay, isSelectedMonth, even
                 </div>
             </div>
             {isOpenModal && 
-                <ModalEvents title={day.format('LL')} onClose={closeModal} dayEvents={dayEvents} eventTarget={eventTarget}/>
+                <ModalEvents title={day.format('LL')} day={day} onClose={closeModal} dayEvents={dayEvents} eventTarget={eventTarget}/>
             }
         </>
     )

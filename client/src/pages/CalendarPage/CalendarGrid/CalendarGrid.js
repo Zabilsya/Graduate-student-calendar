@@ -25,7 +25,7 @@ export const CalendarGrid = ({ startDay, today, events, eventTarget }) => {
             <div className="calendar-grid">
                 {
                     daysArr.map((day, index) => {
-                        const dayEvents = filteredEvents.filter(event => event.startDt.isSame(day, 'day'))
+                        const dayEvents = filteredEvents.filter(event => event.startDt.isSame(day, 'day')).sort((left, right) => left.startDt.diff(right.startDt))
                         return <CalendarDay day={day} dayEvents={dayEvents} isCurrentDay={isCurrentDay} isSelectedMonth={isSelectedMonth} eventTarget={eventTarget} key={index}/>
                     })
                 }

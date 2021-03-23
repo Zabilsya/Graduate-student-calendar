@@ -26,7 +26,7 @@ export const AuthPage = () => {
           })
         const result = await response.json()
         if(!response.ok) {
-            console.log(result.message)
+            window.M.toast({html: result.message, classes: "message", displayLength: 2000})
             return
         }
         auth.login(result.token, result.userId)
