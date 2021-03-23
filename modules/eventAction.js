@@ -12,9 +12,28 @@ module.exports = function (socket, eventChangeStream, userId) {
 
     this.subscribeToEvents = function () {
 
+        async function getViewers(event) {
+
+            let viewers = Array()
+            if (event.target.lenght == 'YYYY'.length) {
+
+                // only id
+                viewers = await User.find({
+                    "admissionYear": Number(newEvent.target)
+                })
+
+            } else {
+                viewers.push(newEvent.target)
+            }
+
+            return viewers
+
+        }
+
         eventChangeStream.on("change", async (change) => {
 
             const eventId = change.documentKey._id
+
 
             switch (change.operationType) {
                 case "insert":
@@ -36,6 +55,7 @@ module.exports = function (socket, eventChangeStream, userId) {
 
                         socket.emit("newEvent", newEvent)
 
+
                     } else if (newEvent.target.lenght == 'YYYY'.length) {
 
                         const admissionYear = await User.findOne({
@@ -45,8 +65,10 @@ module.exports = function (socket, eventChangeStream, userId) {
                         if (admissionYear == newEvent.target) {
                             socket.emit("newEvent", newEvent)
                         }
+
                     }
 
+                    const viewers = getViewers(newEvent)
 
                     // create notification
                     createDt = new Date(moment().format().slice(0, -8) + '00').toISOString()
@@ -57,7 +79,8 @@ module.exports = function (socket, eventChangeStream, userId) {
                         eventName: change.fullDocument.name,
                         createDt: createDt,
                         type: 'insert',
-                        daysLeft: null
+                        daysLeft: null,
+                        viewers: viewers
                     })
                     await newNotification.save()
 
@@ -182,16 +205,19 @@ module.exports = function (socket, eventChangeStream, userId) {
 
                 // create notification about deletion
                 const createDt = new Date(moment().format().slice(0, -8) + '00').toISOString()
-                
+
+                const viewers = getViewers(eventForDelete)
+
                 newNotification = new Notification({
                     target: eventForDelete.target,
                     eventId: eventId,
                     eventName: eventForDelete.name,
                     createDt: createDt,
                     type: 'delete',
-                    daysLeft: null
+                    daysLeft: null,
+                    viewers: viewers
                 })
-                
+
                 await newNotification.save()
 
                 await Event.deleteOne({
@@ -251,13 +277,16 @@ module.exports = function (socket, eventChangeStream, userId) {
                 // Создать новое уведомление об апдейте
                 const createDt = new Date(moment().format().slice(0, -8) + '00').toISOString()
 
+                const viewers = getViewers(eventForUpdate)
+
                 newNotification = new Notification({
                     target: eventForUpdate.target,
                     eventId: eventForUpdate._id,
                     eventName: eventForUpdate.name,
                     createDt: createDt,
                     type: 'update',
-                    daysLeft: null
+                    daysLeft: null,
+                    viewers: viewers
                 })
 
                 await newNotification.save()

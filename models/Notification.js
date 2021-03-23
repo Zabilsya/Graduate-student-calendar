@@ -27,7 +27,10 @@ const schema = new Schema({
     daysLeft: {
         type: Number,
         required: false
-    }
+    },
+    viewers: [{
+        type: String
+    }]
 })
 
 module.exports = model('Notification', schema)
