@@ -45,6 +45,17 @@ module.exports = function (socket, notificationChangeStream, userId) {
                         }
                     }
                     break;
+                
+                case "update":
+
+                    viewedNotification = Notification.findOne({
+                        "_id" : change.documentKey._id
+                    })
+
+                    socket.emit('viewNotification',viewedNotification)
+
+                    break;
+
             }
         })
     }
@@ -77,6 +88,23 @@ module.exports = function (socket, notificationChangeStream, userId) {
 
             } catch (e) {
                 socket.emit('getNotifications', 'Ошибка!')
+            }
+        })
+
+        socket.on('viewNotification', async (notification) => {
+
+            
+
+            try {
+                
+                Notification.updateOne({
+                    "_id": notification._id
+                }, {
+                    "viewers": notification.viewers.push(userId)
+                })
+                            
+            } catch (e) {
+                console.log('Обновление уведомления произошло с ошибкой')
             }
         })
     }
