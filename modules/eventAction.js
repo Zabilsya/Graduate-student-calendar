@@ -36,7 +36,7 @@ module.exports = function (socket, eventChangeStream, userId) {
                     if (userId == config.get('superuserId') || (userId == newEvent.target)) {
                         socket.emit("newEvent", newEvent)
 
-                    } else if (newEvent.target.lenght == 'YYYY'.length) {
+                    } else if (newEvent.target.length == 'YYYY'.length) {
 
                         const user = await User.findOne({
                             "_id": userId
@@ -104,7 +104,7 @@ module.exports = function (socket, eventChangeStream, userId) {
 
                         socket.emit("updatedEvent", updatedEvent)
 
-                    } else if (response.target.lenght == 'YYYY'.length) {
+                    } else if (response.target.lenght == 'YYYY'.lenght) {
 
                         const user = await User.findOne({
                             "_id": userId
