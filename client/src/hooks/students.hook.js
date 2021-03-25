@@ -2,11 +2,10 @@ import React, { useEffect, useState, useContext } from "react"
 import { ScheduleContext } from './../context/ScheduleContext'
 import { useRequest } from "./request.hook"
 
-export const useStudents = () => {
+export const useStudents = socket => {
   const [students, setStudents] = useState([])
   const [chosenStudent, setChosenStudent] = useState(false)
-  const request = useRequest()
-  const { socket } = useContext(ScheduleContext)
+  const request = useRequest(socket)
 
   useEffect(() => {
     if (socket) {
@@ -30,6 +29,7 @@ export const useStudents = () => {
           const before = students.slice(0, index);
           const after = students.slice(index + 1);
           const newList = [...before, message, ...after];
+          if (message._id != '604fb74012c7d21c984aed35')
           setChosenStudent(message)
           return newList
         })

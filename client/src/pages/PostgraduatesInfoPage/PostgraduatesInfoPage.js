@@ -1,15 +1,19 @@
 import React, { useState, useEffect, useContext } from 'react'
 import { PostgraduatesTable } from './PostgraduatesTable/PostgraduatesTable'
 import { ModalStudent } from '../../Components/ModalStudent/ModalStudent'
+import { StudentContext } from '../../context/StudentContext'
 
 import './css/style.css'
 import { useStudents } from '../../hooks/students.hook'
 
-export const PostgraduatesInfoPage = ({students, chosenStudent, setChosenStudent}) => {
+export const PostgraduatesInfoPage = () => {
+    let {students, chosenStudent, setChosenStudent} = useContext(StudentContext)
     const [isOpenModal, setIsOpenModal] = useState(false)
     const [modalInfo, setModalInfo] = useState({
         data: '', title: '', buttonText: ''
     })
+
+    students = students.filter(user => user._id != '604fb74012c7d21c984aed35')
 
     const chooseStudent = student => {
         setChosenStudent(student)

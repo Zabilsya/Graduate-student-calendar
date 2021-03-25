@@ -11,8 +11,9 @@ export const useNotifications = (socket, userId) => {
   const [notifications, setNotifications] = useState([])
   const request = useRequest(socket)
   
-  const viewNotification = async item => {
-    await request('viewNotification', item)
+  const viewNotification = item => {
+    if (!item.viewers.includes(userId))
+    socket.emit('viewNotification', item)
   }
 
   useEffect(() => {
@@ -30,15 +31,14 @@ export const useNotifications = (socket, userId) => {
           message.createDt = moment(message.createDt)
           message.type = createNotificationMessage(message)
           setNotifications(notifications => {
-            const index = notifications.findIndex(item => item._id === notifications._id)
+            const index = notifications.findIndex(item => item._id === message._id)
             const before = notifications.slice(0, index);
             const after = notifications.slice(index + 1);
-            const newList = [...before, notifications, ...after];
+            const newList = [...before, message, ...after];
             return newList
           })
         })
-    }
-      
+      }
     }, [socket])
 
   async function getNotifications() {
@@ -46,32 +46,35 @@ export const useNotifications = (socket, userId) => {
       notifications = await request('getNotifications')
       notifications.forEach(item => {
         item.createDt = moment(item.createDt)
-        item.type = createNotificationMessage(item)
-        // if (!item.viewers.contains(userId)) {
-        //   toast(`${item.type}: ${item.eventName}`, {
-        //     position: toast.POSITION.TOP_LEFT
-        // })
-        // }
+        item = createNotificationMessage(item)
+        if (!item.viewers.includes(userId)) {
+          toast(`${item.type}: ${item.eventName}`, {
+            position: toast.POSITION.TOP_LEFT
+        })
+        }
       })
       setNotifications(notifications)
   }
 
   function createNotificationMessage(item) {
-    let message
       switch (item.type) {
         case 'insert':
-          message = 'Добавлено новое событие'
+          item.type = 'Добавлено новое событие'
         break
         case 'update':
-          message = 'Изменена информация о событии'
+          item.type = 'Изменена информация о событии'
           break
         case 'delete':
-          message = 'Было удалено событие'
+          item.type = 'Было удалено событие'
           break
         default:
-          message = `Напоминание. Осталось ${item.daysLeft} дней до начала события`
+          item.type = 'Напоминание о событии'
+          if (item.daysLeft)
+            item.message = `Дней до начала события: ${item.daysLeft}`
+          else
+            item.message = `Остался 1 час до начала события!`
       }
-      return message
+      return item
   }
 
   return {notifications, viewNotification}

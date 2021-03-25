@@ -5,9 +5,9 @@
       grid-template-columns: repeat(7, 1fr);
   -ms-grid-rows: (1fr)[6];
       grid-template-rows: repeat(6, 1fr);
-  grid-gap: 1px;
+  grid-gap: 1.8px;
   background-color: #005bab;
-  border-top: 1px solid #005bab;
+  border-top: 1.8px solid #005bab;
 }
 
 .calendar-grid-header {

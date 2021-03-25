@@ -174,11 +174,6 @@ export const Event = ({ data, day, reveal, changeModalMode, onConfirmChanges, ev
                     </select>
                 </div>
 
-                {/* <div className="form-floating mb-3">
-                    <textarea type="text" id="description" className="form-control description" name="description" value={form.description} onChange={changeInputHandler} readOnly={!editingMode} />
-                    
-                </div> */}
-
                 <div className={eventVisibility ? 'modal-buttons show' : 'modal-buttons hide'}>
                     <button className="modal-footer-button" onClick={editingMode ? saveChanges : turnOnEditingMode}>{editingMode ? 'Сохранить' : 'Редактировать'}</button>
                     <button className="modal-footer-button" onClick={editingMode ? cancelAdding : deleteEvent}>{editingMode ? 'Отменить' : 'Удалить'}</button>

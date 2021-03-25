@@ -1,0 +1,36 @@
+$hseColor:#005bab;
+$white:#ffffff;
+$black:#000000;
+
+.personal-info-wrapper {
+    width: 79%;
+    margin: 0 auto;
+    margin-top: 30px;
+
+    .personal-info {
+        width: 85%;
+        margin: 0 auto;
+    
+        .button {
+            display: block;
+            width: 330px;
+            padding: 12px;
+            border-radius: 10px;
+            margin: 0 auto;
+            background-color: $white;
+            border: 1px solid $hseColor;
+            color: $hseColor;
+            font-weight: 700;
+            text-align: center;
+            transition: all .2s linear;
+        
+            &:hover {
+                background-color: $hseColor;
+                color: $white;
+            }
+        }
+    }
+}
+
+
+

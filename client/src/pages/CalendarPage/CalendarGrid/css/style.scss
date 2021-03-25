@@ -6,9 +6,9 @@ $red:#ff0000;
     display: grid;
     grid-template-columns: repeat(7, 1fr);
     grid-template-rows: repeat(6, 1fr);
-    grid-gap: 1px;
+    grid-gap: 1.8px;
     background-color: $hseColor;
-    border-top: 1px solid $hseColor;
+    border-top: 1.8px solid $hseColor;
 }
 
 .calendar-grid-header {

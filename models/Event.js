@@ -17,7 +17,7 @@ const schema = new Schema({
         required: true
     },
     priority: {
-        type: Number,
+        type: String,
         required: true
     },
     type: {
