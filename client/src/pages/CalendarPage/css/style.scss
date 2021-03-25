@@ -1,8 +1,59 @@
 $hseColor:#005bab;
 
-.calendar {
-    width: 1200px;
-    margin: 0 auto;
-    border: 5px solid $hseColor;
-    border-radius: 8px;
+
+.main-page-wrapper {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin-top: 24px;
+
+    .filters-wrapper {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        width: 100%;
+        height: 85px;
+        max-width: 1200px;
+        margin-bottom: 20px;
+
+        .filters-title {
+            margin-bottom: 10px;
+            font-size: 18px;
+            font-style: oblique;
+            font-weight: 700;
+        }
+        
+        .filters {
+            width: 100%;
+            display: flex;
+            justify-content: center;
+
+            .filter {
+                width: 24%;
+                margin-right: 14px;
+
+                label {
+                    font-size: 15px;
+                }
+
+                .custom-select {
+                    width: 100%;
+                }
+               
+            }
+
+            .filter:last-child {
+                margin-right: 0;
+            }
+        }
+    }
+
+    .calendar {
+        width: 1200px;
+        margin: 0 auto;
+        border: 5px solid $hseColor;
+        border-radius: 8px;
+    }
 }
+

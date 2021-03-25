@@ -1,5 +1,5 @@
 .main-table-header {
-  width: 75%;
+  width: 1185px;
   text-align: center;
   padding: 0;
 }
@@ -26,12 +26,12 @@
 
 .main-table-header .table-header th:nth-child(6) {
   width: 4%;
-  font-size: 14px;
+  font-size: 12px;
 }
 
 .main-table-wrapper {
-  width: 76%;
-  height: 600px;
+  width: 1200px;
+  height: 548px;
   overflow-y: auto;
 }
 

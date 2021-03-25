@@ -1,16 +1,19 @@
 import React, { useState, useEffect, useContext } from 'react'
 import { PostgraduatesTable } from './PostgraduatesTable/PostgraduatesTable'
 import { ModalStudent } from '../../Components/ModalStudent/ModalStudent'
+import { StudentContext } from '../../context/StudentContext'
 
 import './css/style.css'
 import { useStudents } from '../../hooks/students.hook'
 
 export const PostgraduatesInfoPage = () => {
-    const { students, chosenStudent, setChosenStudent } = useStudents()
+    let {students, chosenStudent, setChosenStudent} = useContext(StudentContext)
     const [isOpenModal, setIsOpenModal] = useState(false)
     const [modalInfo, setModalInfo] = useState({
         data: '', title: '', buttonText: ''
     })
+
+    students = students.filter(user => user._id != '604fb74012c7d21c984aed35')
 
     const chooseStudent = student => {
         setChosenStudent(student)
@@ -46,11 +49,13 @@ export const PostgraduatesInfoPage = () => {
             <div className="content-elements">
                 <PostgraduatesTable students={students} chooseStudent={chooseStudent} chosenStudent={chosenStudent}/>
             </div>
-            <div>
-                <button type="button" id="" onClick={editStudent}>Редактировать информацию об аспиранте</button>
-                <button type="button" onClick={addStudent}>Добавить аспиранта</button>
-                <button type="button"onClick={deleteStudent}>Удалить аспиранта</button>
-            </div>
+            {students.length > 0 && 
+                <div className="buttons">
+                    <button type="button" className="button" onClick={editStudent}>Редактировать информацию об аспиранте</button>
+                    <button type="button" className="button" onClick={addStudent}>Добавить аспиранта</button>
+                    <button type="button" className="button" onClick={deleteStudent}>Удалить аспиранта</button>
+                </div>
+            }
             {isOpenModal && 
                 <ModalStudent modalInfo={modalInfo} onClose={closeModal}/>
             }

@@ -32,12 +32,6 @@ const NotificationActions = require('./modules/notificationActions')
 
 async function start() {
     try {
-
-        
-        
-
-      
-
         var date = moment().format('D.M.Y')
         var time = moment().format('H:mm')
 
@@ -49,8 +43,6 @@ async function start() {
             useUnifiedTopology: true,
             useCreateIndex: true
         })
-
-        
 
         // cron.schedule('* * * * *', function(){
     

@@ -14,11 +14,11 @@ export const useRoutes = (isAuthenticated, userId) => {
                     <CalendarPage />
                 </Route>
                 <Route path="/personalInfo" exact>
-                    <PersonalInfoPage />
+                    <PersonalInfoPage/>
                 </Route>
                 {userId === '604fb74012c7d21c984aed35' &&
                     <Route path="/postgraduatesInfo" exact>
-                        <PostgraduatesInfoPage />
+                        <PostgraduatesInfoPage/>
                     </Route>
                 }
                 <Route path="/support" exact>

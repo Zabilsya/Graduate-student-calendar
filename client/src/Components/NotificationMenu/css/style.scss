@@ -15,7 +15,49 @@ $hseColor:#005bab;
     transition: all .3s linear;
 
     .notification {
+        position: relative;
         height: 20%;
+        border-bottom: 1px solid #000000;
+        overflow: hidden;
+
+        &-header {
+            height: 16%;
+            background-color: rgba(0,0,0,.23);
+            padding-right: 8px;
+        }
+
+        &-body {
+            width: 100%;
+            height: 84%;
+            padding: 23px;
+            padding-top: 8px;
+            cursor: pointer;
+        }
+
+        &-time {
+            text-align: right;
+        }
+
+        &-type {
+            font-weight: 700;
+            font-style: oblique;
+        }
+
+        &-event {
+            height: 63%;
+            text-align: left;
+            font-size: 18px;
+            overflow-wrap: break-word;
+            overflow: hidden;
+        }
+
+        &-message {
+            height: 15%;
+            text-align: center;
+            font-weight: 600;
+            font-family: Georgia, 'Times New Roman', Times, serif;
+            color: red;
+        }
     }
 }
 
@@ -70,4 +112,8 @@ $hseColor:#005bab;
 
 .icon-open { 
     left: 400px;
+}
+
+.not-viewed {
+    background-color: #62ca48;
 }

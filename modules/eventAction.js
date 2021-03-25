@@ -8,32 +8,13 @@ const config = require('config')
 module.exports = function (socket, eventChangeStream, userId) {
 
     let newNotification
-    let createDt
 
     this.subscribeToEvents = function () {
-
-        async function getViewers(event) {
-
-            let viewers = Array()
-            if (event.target.lenght == 'YYYY'.length) {
-
-                // only id
-                viewers = await User.find({
-                    "admissionYear": Number(newEvent.target)
-                })
-
-            } else {
-                viewers.push(newEvent.target)
-            }
-
-            return viewers
-
-        }
+        let deletedEvent;
 
         eventChangeStream.on("change", async (change) => {
 
             const eventId = change.documentKey._id
-
 
             switch (change.operationType) {
                 case "insert":
@@ -50,9 +31,9 @@ module.exports = function (socket, eventChangeStream, userId) {
                         nextNotifficationDt: change.fullDocument.nextNotifficationDt,
                         target: change.fullDocument.target
                     }
+                    
 
                     if (userId == config.get('superuserId') || (userId == newEvent.target)) {
-
                         socket.emit("newEvent", newEvent)
 
 
@@ -68,41 +49,25 @@ module.exports = function (socket, eventChangeStream, userId) {
 
                     }
 
-                    const viewers = getViewers(newEvent)
-
-                    // create notification
-                    createDt = new Date(moment().format().slice(0, -8) + '00').toISOString()
-
-                    newNotification = new Notification({
-                        target: change.fullDocument.target,
-                        eventId: eventId,
-                        eventName: change.fullDocument.name,
-                        createDt: createDt,
-                        type: 'insert',
-                        daysLeft: null,
-                        viewers: viewers
-                    })
-                    await newNotification.save()
-
+                    
                     break;
 
                 case "delete":
-
-                    if (userId == config.get('superuserId') || (userId == change.target)) {
+                   
+                    if (userId == config.get('superuserId') || (userId == deletedEvent.target)) {
 
                         socket.emit("deletedEvent", eventId)
 
-                    } else if (response.target.lenght == 'YYYY'.length) {
+                    } else if (deletedEvent.target.lenght == 'YYYY'.length) {
 
                         const admissionYear = await User.findOne({
                             "_id": userId
                         }).admissionYear
 
-                        if (admissionYear == response.target) {
-                            socket.emit("deletedEvent", response)
+                        if (admissionYear == deletedEvent.target) {
+                            socket.emit("deletedEvent", eventId)
                         }
                     }
-                    socket.emit("deletedEvent", eventId);
 
                     break;
 
@@ -152,7 +117,6 @@ module.exports = function (socket, eventChangeStream, userId) {
         })
 
         socket.on('addEvent', async (newEvent) => {
-
             try {
                 let {
                     name,
@@ -164,14 +128,13 @@ module.exports = function (socket, eventChangeStream, userId) {
                     info,
                     target
                 } = newEvent
-                priority = 2
-                type = 'project'
-                notificationPeriod = 2
 
+                const notPeriod = Number(notificationPeriod)
+                
                 const momentTime = moment(startDt)
                 startDt = new Date(momentTime.format().slice(0, -8) + '00').toISOString()
 
-                const date = momentTime.add(notificationPeriod, 'days')
+                const date = momentTime.add(notPeriod, 'days')
 
                 const nextNotifficationDt = new Date(date.format().slice(0, -8) + '00').toISOString()
 
@@ -181,14 +144,30 @@ module.exports = function (socket, eventChangeStream, userId) {
                     startDt: startDt,
                     priority: priority,
                     type: type,
-                    notificationPeriod: notificationPeriod,
+                    notificationPeriod: notPeriod,
                     info: info,
                     nextNotifficationDt: nextNotifficationDt,
                     target: target
                 })
-
+                
                 await event.save()
                 socket.emit('addEvent', 'Мероприятие успешно добавлено в систему!')
+
+                // create notification
+                const temp = await Event.findOne({"name": name, "startDt": startDt})
+                const createDt = new Date(moment().format().slice(0, -8) + '00').toISOString()
+
+                newNotification = new Notification({
+                    target: temp.target,
+                    eventId: temp._id.toString(),
+                    eventName: temp.name,
+                    createDt: createDt,
+                    type: 'insert',
+                    daysLeft: null,
+                    viewers: []
+                })
+                
+                await newNotification.save()
             } catch (e) {
                 socket.emit('addEvent', 'Ошибка!')
             }
@@ -206,8 +185,6 @@ module.exports = function (socket, eventChangeStream, userId) {
                 // create notification about deletion
                 const createDt = new Date(moment().format().slice(0, -8) + '00').toISOString()
 
-                const viewers = getViewers(eventForDelete)
-
                 newNotification = new Notification({
                     target: eventForDelete.target,
                     eventId: eventId,
@@ -215,8 +192,10 @@ module.exports = function (socket, eventChangeStream, userId) {
                     createDt: createDt,
                     type: 'delete',
                     daysLeft: null,
-                    viewers: viewers
+                    viewers: []
                 })
+
+                deletedEvent = eventForDelete
 
                 await newNotification.save()
 
@@ -268,7 +247,7 @@ module.exports = function (socket, eventChangeStream, userId) {
                 socket.emit('updateEvent', 'Мероприятие успешно изменено')
 
                 // Удалить уведомление об апдейте
-                Notification.deleteOne({
+                await Notification.deleteOne({
                     "eventId": eventForUpdate._id,
                     "type": "update"
                 })
@@ -277,8 +256,6 @@ module.exports = function (socket, eventChangeStream, userId) {
                 // Создать новое уведомление об апдейте
                 const createDt = new Date(moment().format().slice(0, -8) + '00').toISOString()
 
-                const viewers = getViewers(eventForUpdate)
-
                 newNotification = new Notification({
                     target: eventForUpdate.target,
                     eventId: eventForUpdate._id,
@@ -286,7 +263,7 @@ module.exports = function (socket, eventChangeStream, userId) {
                     createDt: createDt,
                     type: 'update',
                     daysLeft: null,
-                    viewers: viewers
+                    viewers: []
                 })
 
                 await newNotification.save()

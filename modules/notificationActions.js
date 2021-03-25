@@ -27,6 +27,7 @@ module.exports = function (socket, notificationChangeStream, userId) {
                         eventName: change.fullDocument.eventName,
                         createDt: change.fullDocument.createDt,
                         type: change.fullDocument.type,
+                        viewers: change.fullDocument.viewers,
                         daysLeft: change.fullDocument.daysLeft
                     }
 
@@ -34,7 +35,7 @@ module.exports = function (socket, notificationChangeStream, userId) {
 
                         socket.emit("newNotification", newNotification)
 
-                    } else if (newEvent.target.lenght == 'YYYY'.length) {
+                    } else if (newNotification.target.lenght == 'YYYY'.length) {
 
                         const admissionYear = await User.findOne({
                             "_id": userId
@@ -47,13 +48,11 @@ module.exports = function (socket, notificationChangeStream, userId) {
                     break;
                 
                 case "update":
-
-                    viewedNotification = Notification.findOne({
+                    viewedNotification = await Notification.findOne({
                         "_id" : change.documentKey._id
                     })
 
-                    socket.emit('viewNotification',viewedNotification)
-
+                    socket.emit('viewNotification', viewedNotification)
                     break;
 
             }
@@ -67,7 +66,7 @@ module.exports = function (socket, notificationChangeStream, userId) {
 
             try {
                 // Тут нужно будет изменить условие на !=
-                if (userId == config.get('superuserId')) {
+                if (userId != config.get('superuserId')) {
 
                     const admissionYear = await User.findOne({
                         "_id": userId
@@ -84,6 +83,8 @@ module.exports = function (socket, notificationChangeStream, userId) {
                     })
 
                 }
+
+                if (!userNotifications) userNotifications = []
                 socket.emit('getNotifications', userNotifications)
 
             } catch (e) {
@@ -92,15 +93,13 @@ module.exports = function (socket, notificationChangeStream, userId) {
         })
 
         socket.on('viewNotification', async (notification) => {
-
             
-
             try {
-                
-                Notification.updateOne({
+                notification.viewers.push(userId)
+                await Notification.updateOne({
                     "_id": notification._id
                 }, {
-                    "viewers": notification.viewers.push(userId)
+                    "viewers": notification.viewers
                 })
                             
             } catch (e) {
