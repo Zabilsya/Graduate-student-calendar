@@ -37,9 +37,11 @@ module.exports = function (socket, notificationChangeStream, userId) {
 
                     } else if (newNotification.target.lenght == 'YYYY'.length) {
 
-                        const admissionYear = await User.findOne({
+                        const user = await User.findOne({
                             "_id": userId
-                        }).admissionYear
+                        })
+
+                        const admissionYear = user.admissionYear
 
                         if (admissionYear == newNotification.target) {
                             socket.emit("newNotification", newNotification)
@@ -65,12 +67,14 @@ module.exports = function (socket, notificationChangeStream, userId) {
             let userNotifications
 
             try {
-                // Тут нужно будет изменить условие на !=
+            
                 if (userId != config.get('superuserId')) {
 
-                    const admissionYear = await User.findOne({
+                    const user = await User.findOne({
                         "_id": userId
-                    }).admissionYear
+                    })
+
+                    const admissionYear = user.admissionYear
 
                     userNotifications = await Notification.find({
                         $or: [{

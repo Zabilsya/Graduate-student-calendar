@@ -36,7 +36,7 @@ export const useSchedule = socket => {
   }, [socket])
 
   async function getEvents() {
-      let events = false
+      let events = []
       events = await request('getEvents')
       events.forEach(item => {
         item.startDt = moment(item.startDt)

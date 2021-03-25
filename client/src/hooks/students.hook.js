@@ -39,7 +39,7 @@ export const useStudents = socket => {
   }, [socket])
 
   async function getStudents() {
-    let users = false
+    let users = []
     users = await request('getUsers')
     setStudents(users)
     setChosenStudent(users[0])
