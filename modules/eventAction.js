@@ -36,12 +36,13 @@ module.exports = function (socket, eventChangeStream, userId) {
                     if (userId == config.get('superuserId') || (userId == newEvent.target)) {
                         socket.emit("newEvent", newEvent)
 
-
                     } else if (newEvent.target.lenght == 'YYYY'.length) {
 
-                        const admissionYear = await User.findOne({
+                        const user = await User.findOne({
                             "_id": userId
-                        }).admissionYear
+                        })
+
+                        const admissionYear = user.admissionYear
 
                         if (admissionYear == newEvent.target) {
                             socket.emit("newEvent", newEvent)
@@ -53,21 +54,22 @@ module.exports = function (socket, eventChangeStream, userId) {
                     break;
 
                 case "delete":
-                   
-                    if (userId == config.get('superuserId') || (userId == deletedEvent.target)) {
+                    socket.emit("deletedEvent", eventId)
 
-                        socket.emit("deletedEvent", eventId)
+                    // if (userId == config.get('superuserId') || (userId == deletedEvent.target)) {
 
-                    } else if (deletedEvent.target.lenght == 'YYYY'.length) {
+                    //     socket.emit("deletedEvent", eventId)
 
-                        const admissionYear = await User.findOne({
-                            "_id": userId
-                        }).admissionYear
+                    // } else if (deletedEvent.target.lenght == 'YYYY'.length) {
 
-                        if (admissionYear == deletedEvent.target) {
-                            socket.emit("deletedEvent", eventId)
-                        }
-                    }
+                    //     const admissionYear = await User.findOne({
+                    //         "_id": userId
+                    //     }).admissionYear
+
+                    //     if (admissionYear == deletedEvent.target) {
+                    //         socket.emit("deletedEvent", eventId)
+                    //     }
+                    // }
 
                     break;
 
@@ -104,9 +106,11 @@ module.exports = function (socket, eventChangeStream, userId) {
 
                     } else if (response.target.lenght == 'YYYY'.length) {
 
-                        const admissionYear = await User.findOne({
+                        const user = await User.findOne({
                             "_id": userId
-                        }).admissionYear
+                        })
+
+                        const admissionYear = user.admissionYear
 
                         if (admissionYear == response.target) {
                             socket.emit("updatedEvent", updatedEvent)
@@ -281,13 +285,13 @@ module.exports = function (socket, eventChangeStream, userId) {
 
                 if (userId != config.get('superuserId')) {
 
-                    const admissionYear = await User.findOne({
+                    const user = await User.findOne({
                         "_id": userId
-                    }).admissionYear
-
+                    })
+                    
                     userEvents = await Event.find({
                         $or: [{
-                                "target": admissionYear
+                                "target": user.admissionYear.toString()
                             },
                             {
                                 "target": userId

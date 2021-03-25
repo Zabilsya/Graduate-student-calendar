@@ -16,7 +16,6 @@ export const ModalEvents = ({ title, day, dayEvents, onClose, eventTarget }) => 
 
 
     const onConfirmChanges = async (type, form) => {
-        // form.startDatetime = moment(form.startDatetime).subtract(5, 'h')
         await request(type, form)
     }
 
