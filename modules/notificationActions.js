@@ -35,7 +35,7 @@ module.exports = function (socket, notificationChangeStream, userId) {
 
                         socket.emit("newNotification", newNotification)
 
-                    } else if (newNotification.target.lenght == 'YYYY'.length) {
+                    } else if (newNotification.target.lenght == 'YYYY'.lenght) {
 
                         const user = await User.findOne({
                             "_id": userId
