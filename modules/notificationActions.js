@@ -66,7 +66,7 @@ module.exports = function (socket, notificationChangeStream, userId) {
 
             try {
                 // Тут нужно будет изменить условие на !=
-                if (userId == config.get('superuserId')) {
+                if (userId != config.get('superuserId')) {
 
                     const admissionYear = await User.findOne({
                         "_id": userId
@@ -83,6 +83,8 @@ module.exports = function (socket, notificationChangeStream, userId) {
                     })
 
                 }
+
+                if (!userNotifications) userNotifications = []
                 socket.emit('getNotifications', userNotifications)
 
             } catch (e) {

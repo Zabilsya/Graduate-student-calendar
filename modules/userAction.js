@@ -78,7 +78,7 @@ module.exports = function (socket, userChangeStream, userId) {
                         admissionYear: response.admissionYear,
                     }
 
-                    if (userId == config.get('superuserId') || userId == newUser._id.toString()) {
+                    if (userId == config.get('superuserId') || userId == updatedUser._id.toString()) {
                         socket.emit("updatedUser", updatedUser)
                     }
 

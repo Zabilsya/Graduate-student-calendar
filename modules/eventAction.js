@@ -10,6 +10,7 @@ module.exports = function (socket, eventChangeStream, userId) {
     let newNotification
 
     this.subscribeToEvents = function () {
+        let deletedEvent;
 
         eventChangeStream.on("change", async (change) => {
 
@@ -52,22 +53,21 @@ module.exports = function (socket, eventChangeStream, userId) {
                     break;
 
                 case "delete":
-
-                    if (userId == config.get('superuserId') || (userId == change.target)) {
+                   
+                    if (userId == config.get('superuserId') || (userId == deletedEvent.target)) {
 
                         socket.emit("deletedEvent", eventId)
 
-                    } else if (response.target.lenght == 'YYYY'.length) {
+                    } else if (deletedEvent.target.lenght == 'YYYY'.length) {
 
                         const admissionYear = await User.findOne({
                             "_id": userId
                         }).admissionYear
 
-                        if (admissionYear == response.target) {
-                            socket.emit("deletedEvent", response)
+                        if (admissionYear == deletedEvent.target) {
+                            socket.emit("deletedEvent", eventId)
                         }
                     }
-                    socket.emit("deletedEvent", eventId);
 
                     break;
 
@@ -194,6 +194,8 @@ module.exports = function (socket, eventChangeStream, userId) {
                     daysLeft: null,
                     viewers: []
                 })
+
+                deletedEvent = eventForDelete
 
                 await newNotification.save()
 

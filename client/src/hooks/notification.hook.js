@@ -10,6 +10,7 @@ toast.configure()
 export const useNotifications = (socket, userId) => {
   const [notifications, setNotifications] = useState([])
   const request = useRequest(socket)
+  console.log(notifications)
   
   const viewNotification = item => {
     if (!item.viewers.includes(userId))
@@ -21,7 +22,7 @@ export const useNotifications = (socket, userId) => {
         getNotifications()
         socket.on('newNotification', message => {
             message.createDt = moment(message.createDt)
-            message.type = createNotificationMessage(message)
+            message = createNotificationMessage(message)
             setNotifications(notifications => ([message, ...notifications]))
             toast(`${message.type}: ${message.eventName}`, {
               position: toast.POSITION.TOP_LEFT
@@ -29,7 +30,7 @@ export const useNotifications = (socket, userId) => {
         })
         socket.on('viewNotification', message => {
           message.createDt = moment(message.createDt)
-          message.type = createNotificationMessage(message)
+          message = createNotificationMessage(message)
           setNotifications(notifications => {
             const index = notifications.findIndex(item => item._id === message._id)
             const before = notifications.slice(0, index);
@@ -42,7 +43,7 @@ export const useNotifications = (socket, userId) => {
     }, [socket])
 
   async function getNotifications() {
-      let notifications = false
+      let notifications = []
       notifications = await request('getNotifications')
       notifications.forEach(item => {
         item.createDt = moment(item.createDt)

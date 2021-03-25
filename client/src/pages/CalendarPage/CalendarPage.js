@@ -20,7 +20,7 @@ export const CalendarPage = () => {
     })
     const isAdmin = userId == '604fb74012c7d21c984aed35'
     let eventTarget = userId
-    let listOfStudents, listOfEvents
+    let listOfStudents, listOfEvents = events
 
     if (isAdmin) {
         listOfStudents = students.filter(student => student.admissionYear == filter.year)
@@ -67,6 +67,7 @@ export const CalendarPage = () => {
             setFilter({ ...filter, year: years[0] })
         }
     }, [students])
+
 
     return (
         <div className="main-page-wrapper">

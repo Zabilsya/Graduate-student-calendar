@@ -16,7 +16,7 @@ export const NotificationMenu = ({notifications, viewNotification, userId}) => {
         <>
         {showMenu && <div className="overlay" onClick={toggleMenu}></div>}
             <div className={showMenu ? "notification-menu menu-open" : "notification-menu"}>
-                {
+            {(notifications && notifications.length > 0) && 
                     notifications.sort((left, right) => right.createDt.diff(left.createDt)).map((item, index) => {
                         const viewed = item.viewers.includes(userId)
                         if (!viewed) notViewedNotifications++ 
@@ -35,8 +35,9 @@ export const NotificationMenu = ({notifications, viewNotification, userId}) => {
                         </div>
                     )})
                 }
-              
+                 
             </div>
+
             <span className={showMenu ? "material-icons notification-icon icon-open" : "material-icons notification-icon"} onClick={toggleMenu}>notifications</span>
             {notViewedNotifications > 0 && 
             <span className={showMenu ? "icon-missed icon-missed-open" : "icon-missed"} onClick={toggleMenu}>{notViewedNotifications}</span>

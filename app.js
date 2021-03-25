@@ -60,7 +60,6 @@ async function start() {
         const notificationChangeStream = Notification.watch();
 
         io.sockets.on('connection', socket => {
-            console.log('окики')
 
                     socket.on('enter', userId => {
 
