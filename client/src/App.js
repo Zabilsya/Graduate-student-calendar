@@ -29,7 +29,7 @@ function App() {
     }}>
       <ScheduleContext.Provider value={{ socket, events }}>
         <StudentContext.Provider value={{ students, chosenStudent, setChosenStudent }}>
-          {userId != '604fb74012c7d21c984aed35' && <NotificationMenu notifications={notifications} viewNotification={viewNotification} userId={userId} />}
+          {(isAuthenticated && userId != '604fb74012c7d21c984aed35') && <NotificationMenu notifications={notifications} viewNotification={viewNotification} userId={userId} />}
           <BrowserRouter>
             {isAuthenticated && <Navigation />}
             <div className="container">

@@ -10,7 +10,7 @@ export const PostgraduatesTable = ({ students, chooseStudent, chosenStudent }) =
         <>
             {students &&
                 <>
-                <h2 className="main-table-title">Список аспирантов</h2>
+                <h1 className="main-table-title">Список аспирантов</h1>
                 <div className="main-table-header">
                     <table className="table-header table-bordered">
                         <tr className="main-table-header-row">

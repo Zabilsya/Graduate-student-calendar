@@ -12,6 +12,7 @@ module.exports = function (socket, userChangeStream, userId) {
         function sendPassword(generatedPassword,userEmail,name) {
             
             let transporter = nodemailer.createTransport({
+                host: 'smtp.gmail.com',
                 service: 'gmail',
                 auth: {
                     user: config.email,
@@ -30,6 +31,7 @@ module.exports = function (socket, userChangeStream, userId) {
                 if(err){
                     console.log('Ошибка',err)
                 }else{
+                    console.log('lal')
                     console.log('Письмо отправлено')
                 }
             })
