@@ -7,6 +7,10 @@ $black:#000000;
     justify-content: center;
     align-items: center;
 
+    .content-elements {
+        margin-top: 30px;
+    }
+
     .buttons {
         display: flex;
         height: 240px;

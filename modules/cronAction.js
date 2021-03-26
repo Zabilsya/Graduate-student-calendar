@@ -1,4 +1,3 @@
-
 const moment = require('moment')
 const Event = require('./../models/Event')
 const User = require('./../models/User')
@@ -10,22 +9,23 @@ const {
 
 const currentDt = new Date(moment().format().slice(0, -8) + '00').toISOString()
 
-
 async function getEventsSheduled() {
-
-    sheduledEvents = await Event.find({
+    console.log('го')
+    const sheduledEvents = await Event.find({
         "nextNotifficationDt": currentDt
     })
+    console.log('ура')
     return sheduledEvents
 }
 
 async function getEventsUrgent() {
 
     const urgentEventStartDt = new Date(moment(currentDt).add(1,'hour')).toISOString()
-
-    urgentEvents = await Event.find({
+    
+    const urgentEvents = await Event.find({
         "startDt": urgentEventStartDt
     })
+    
     return urgentEvents
 }
 
@@ -40,8 +40,7 @@ function getEventIds(sheduledEvents, urgentEvents) {
 }
 
 async function deleteOldNotifications(sheduledEvents, urgentEvents) {
-
-    eventIds = getEventIds(sheduledEvents, urgentEvents)
+    const eventIds = getEventIds(sheduledEvents, urgentEvents)
     await Notification.deleteMany({
         "eventId": {
             $in: eventIds
@@ -49,12 +48,11 @@ async function deleteOldNotifications(sheduledEvents, urgentEvents) {
     })
 }
 
-function createNewNotifications(sheduledEvents, urgentEvents) {
+async function createNewNotifications(sheduledEvents, urgentEvents) {
 
     let newNotification 
     
-    
-    sheduledEvents.forEach(element =>{
+    sheduledEvents.forEach(async element =>{
 
         const millisecondsInHour = 86400000
         const daysLeft = ( moment(element.startDt) - moment(currentDt) ) / millisecondsInHour
@@ -71,7 +69,7 @@ function createNewNotifications(sheduledEvents, urgentEvents) {
         await newNotification.save()
     })
 
-    urgentEvents.forEach(element => {
+    urgentEvents.forEach(async element => {
 
         newNotification = new Notification({
             target: element.target,
@@ -86,10 +84,15 @@ function createNewNotifications(sheduledEvents, urgentEvents) {
     })
 }
 
-
-sheduledEvents = getEventsSheduled()
-urgentEvents = getEventsUrgent()
-if(sheduledEvents || urgentEvents){
-    deleteOldNotifications(sheduledEvents, urgentEvents)
-    createNewNotifications(sheduledEvents, urgentEvents)
+async function start() {
+    const sheduledEvents = await getEventsSheduled()
+    const urgentEvents = await getEventsUrgent()
+    if(sheduledEvents || urgentEvents){
+        await deleteOldNotifications(sheduledEvents, urgentEvents)
+        await createNewNotifications(sheduledEvents, urgentEvents)
+    }
 }
+
+start()
+
+

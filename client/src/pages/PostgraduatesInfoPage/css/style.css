@@ -10,6 +10,10 @@
           align-items: center;
 }
 
+.info .content-elements {
+  margin-top: 30px;
+}
+
 .info .buttons {
   display: -webkit-box;
   display: -ms-flexbox;

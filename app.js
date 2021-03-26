@@ -38,13 +38,17 @@ async function start() {
         console.log(date + " " + time)
 
         server.listen(PORT, () => console.log(`App has been started on port ${PORT}...`))
-        mongoose.connect(config.get('mongoUri'), {
+        await mongoose.connect(config.get('mongoUri'), {
             useNewUrlParser: true,
             useUnifiedTopology: true,
             useCreateIndex: true
         })
 
-        // cron.schedule('* * * * *', function(){
+        const userChangeStream = User.watch();
+        const eventChangeStream = Event.watch();
+        const notificationChangeStream = Notification.watch();
+
+        // cron.schedule('*/30 * * * * *', function(){
     
         //     console.log('Scheduler running...')
             
@@ -54,10 +58,6 @@ async function start() {
         
         // })
 
-
-        const userChangeStream = User.watch();
-        const eventChangeStream = Event.watch();
-        const notificationChangeStream = Notification.watch();
 
         io.sockets.on('connection', socket => {
 

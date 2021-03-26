@@ -6,6 +6,9 @@ import URLs from './../../URLs';
 
 import './css/style.css'
 
+//  superuser@mail.ru 2l7xrqaf
+
+
 export const AuthPage = () => {
     const auth = useContext(AuthContext)
     const [form, setForm] = useState({
