@@ -131,7 +131,6 @@ export const Event = ({ data, day, reveal, changeModalMode, onConfirmChanges, ev
                             label="Дата"
                             value={form.startDt}
                             onChange={changeStartDateHandler}
-                            disablePast
                             format="dd/MM/yyyy"
                         />
                         <TimePicker

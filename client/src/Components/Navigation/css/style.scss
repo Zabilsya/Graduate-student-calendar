@@ -25,19 +25,6 @@ $black:#000000;
         &-item {
             height: 100%;
             width: 250px;
-            border-left: 2px solid $white;
-            border-right: 2px solid $white;
-            transition: all .2s linear;
-
-            &:hover {
-                background-color: $white;
-                border: 1px solid $hseColor;
-            }
-
-            &:hover .link {
-                color: $hseColor;
-            }
-
 
             .link {
                 display: block;
@@ -49,24 +36,27 @@ $black:#000000;
                 text-align: center;
                 font-weight: 700;
                 letter-spacing: 1px;
-            }
-
-            .link-main {
-                border-left: 2px solid $white;
-            }
-
-            .link-logout {
+                transition: all .2s linear;
+                border-top: 1px solid $hseColor;
+                border-bottom: 1px solid $hseColor;
                 border-right: 2px solid $white;
+                border-left: 2px solid $white;
+
+                &:hover {
+                    color: $hseColor;
+                    background-color: $white;
+                    border-right: 1px solid $hseColor;
+                    border-left: 1px solid $hseColor;
+                }
             }
-        }
 
-        &-item-active {
-            background-color: $white;
-            border: 1px solid $hseColor;
-
-            .link {
+            .active {
+                background-color: $white;
                 color: $hseColor;
+                border-right: 1px solid $hseColor;
+                border-left: 1px solid $hseColor;
             }
+
         }
     }
 }

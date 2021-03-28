@@ -48,17 +48,6 @@ async function start() {
         const eventChangeStream = Event.watch();
         const notificationChangeStream = Notification.watch();
 
-        // cron.schedule('*/30 * * * * *', function(){
-    
-        //     console.log('Scheduler running...')
-            
-        //     if(shell.exec('node modules/cronAction.js').code !== 0){
-        //         console.log('Something went wrong')
-        //     }
-        
-        // })
-
-
         io.sockets.on('connection', socket => {
 
                     socket.on('enter', userId => {
@@ -79,6 +68,100 @@ async function start() {
                         notificationAction.getNotifications()
                     })
         })
+
+        cron.schedule('* * * * *', function(){
+    
+            console.log('Scheduler running...')
+            
+            const currentDt = new Date(moment().format().slice(0, -8) + '00').toISOString()
+
+            async function getEventsSheduled() {
+                console.log('го')
+                const sheduledEvents = await Event.find({
+                    "nextNotifficationDt": currentDt
+                })
+                return sheduledEvents
+            }
+            
+            async function getEventsUrgent() {
+            
+                const urgentEventStartDt = new Date(moment(currentDt).add(1,'hour')).toISOString()
+                
+                const urgentEvents = await Event.find({
+                    "startDt": urgentEventStartDt
+                })
+                return urgentEvents
+            }
+            
+            function getEventIds(sheduledEvents, urgentEvents) {
+                const eventIds = Array()
+                const allEvents = sheduledEvents.concat(urgentEvents)
+                allEvents.forEach(function(element) {
+                    eventIds.push(element._id)
+                })
+                return eventIds
+            }
+            
+            async function deleteOldNotifications(sheduledEvents, urgentEvents) {
+                const eventIds = getEventIds(sheduledEvents, urgentEvents)
+                await Notification.deleteMany({
+                    "eventId": {
+                        $in: eventIds
+                    },
+                    "type": "remind",
+                })
+            }
+            
+            async function createNewNotifications(sheduledEvents, urgentEvents) {
+            
+                let newNotification 
+                
+                sheduledEvents.forEach(async element =>{
+            
+                    const millisecondsInHour = 86400000
+                    const daysLeft = ( moment(element.startDt) - moment(currentDt) ) / millisecondsInHour
+            
+                    newNotification = new Notification({
+                        target: element.target,
+                        eventId: element._id,
+                        eventName: element.name,
+                        createDt: currentDt,
+                        type: 'remind',
+                        daysLeft: daysLeft
+                    })
+            
+                    await newNotification.save()
+                })
+            
+                urgentEvents.forEach(async element => {
+            
+                    newNotification = new Notification({
+                        target: element.target,
+                        eventId: element._id,
+                        eventName: element.name,
+                        createDt: currentDt,
+                        type: 'remind',
+                        daysLeft: 0
+                    })
+                    
+                    await newNotification.save()
+                })
+            }
+            
+            async function startCron() {
+                const sheduledEvents = await getEventsSheduled()
+                const urgentEvents = await getEventsUrgent()
+                if(sheduledEvents || urgentEvents){
+                    await deleteOldNotifications(sheduledEvents, urgentEvents)
+                    await createNewNotifications(sheduledEvents, urgentEvents)
+                }
+            }
+            
+            startCron()            
+        
+        })
+
+
     } catch (e) {
         console.log('Server Error', e.message)
         process.exit(1)

@@ -10,8 +10,7 @@ toast.configure()
 export const useNotifications = (socket, userId) => {
   const [notifications, setNotifications] = useState([])
   const request = useRequest(socket)
-  console.log(notifications)
-  
+
   const viewNotification = item => {
     if (!item.viewers.includes(userId))
     socket.emit('viewNotification', item)
@@ -26,6 +25,12 @@ export const useNotifications = (socket, userId) => {
             setNotifications(notifications => ([message, ...notifications]))
             toast(`${message.type}: ${message.eventName}`, {
               position: toast.POSITION.TOP_LEFT
+          })
+        })
+        socket.on('deletedNotification', message => {
+          setNotifications(notifications => {
+            const newArr = [...notifications.filter(item => item._id !== message)]
+            return newArr
           })
         })
         socket.on('viewNotification', message => {

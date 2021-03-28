@@ -14,6 +14,14 @@
   transition: all .3s linear;
 }
 
+.notification-menu .notification-title {
+  font-size: 19px;
+  font-weight: 700;
+  width: 100%;
+  margin-left: 32px;
+  margin-top: 335px;
+}
+
 .notification-menu .notification {
   position: relative;
   height: 20%;

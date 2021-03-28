@@ -6,12 +6,7 @@ const Event = require('./../models/Event')
 const User = require('./../models/User')
 const Notification = require('./../models/Notification')
 
-
-
-
 module.exports = function (socket, notificationChangeStream, userId) {
-
-    // userId - id юзера, который прямо сейчас зашел на сайт
 
     this.subscribeToNotifications = function () {
 
@@ -55,6 +50,10 @@ module.exports = function (socket, notificationChangeStream, userId) {
                     })
 
                     socket.emit('viewNotification', viewedNotification)
+                    break;
+
+                case "delete":
+                    socket.emit('deletedNotification', change.documentKey._id)
                     break;
 
             }

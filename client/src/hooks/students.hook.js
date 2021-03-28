@@ -18,7 +18,10 @@ export const useStudents = socket => {
       socket.on('deletedUser', message => {
         setStudents(students => {
           const newArr = [...students.filter(item => item._id !== message)]
+          if (newArr[0]._id != '604fb74012c7d21c984aed35')
           setChosenStudent(newArr[0])
+          else if (newArr.length > 1)
+          setChosenStudent(newArr[1])
           return newArr
         })
       })
@@ -42,7 +45,10 @@ export const useStudents = socket => {
     let users = []
     users = await request('getUsers')
     setStudents(users)
+    if (users[0]._id != '604fb74012c7d21c984aed35')
     setChosenStudent(users[0])
+    else if (users.length > 1)
+    setChosenStudent(users[1])
   }
 
   return { students, chosenStudent, setChosenStudent }

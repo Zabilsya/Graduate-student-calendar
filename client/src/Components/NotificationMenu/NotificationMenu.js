@@ -29,12 +29,15 @@ export const NotificationMenu = ({notifications, viewNotification, userId}) => {
                                 <div className="notification-type">{item.type}</div>
                                 <div className="notification-event">{item.eventName}</div>
                                 {item.message &&
-                                    <div className="notification-message">{item.type}</div>
+                                    <div className="notification-message">{item.message}</div>
                                 }
                             </div>
                         </div>
                     )})
-                }
+            }
+            {(notifications && notifications.length == 0) &&
+                   <div className="notification-title">У Вас нет никаких уведомлений!</div>
+            }
                  
             </div>
 
