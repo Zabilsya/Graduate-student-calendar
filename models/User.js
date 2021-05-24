@@ -25,6 +25,10 @@ const schema = new Schema({
         type: String,
         required: false
     },
+    direction: {
+        type: String,
+        required: false
+    },
     admissionYear: {
         type: Number,
         required: true

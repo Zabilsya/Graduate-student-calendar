@@ -10,32 +10,44 @@ export const PostgraduatesInfoPage = () => {
     let {students, chosenStudent, setChosenStudent} = useContext(StudentContext)
     const [isOpenModal, setIsOpenModal] = useState(false)
     const [modalInfo, setModalInfo] = useState({
-        data: '', title: '', buttonText: ''
+        data: '', directions: [], title: '', buttonText: ''
     })
 
     students = students.filter(user => user._id != '604fb74012c7d21c984aed35')
+
+    const makeDirectionsArray = () => {
+        const directions = []
+        students.forEach(student => {
+            if (!directions.includes(student.direction))
+                directions.push(student.direction)
+        });
+        return directions 
+    }
 
     const chooseStudent = student => {
         setChosenStudent(student)
     }
 
     const addStudent = () => {
+        const directions = makeDirectionsArray()
         setModalInfo({
-            data: false, title: 'Добавление аспиранта', buttonText: 'Добавить'
+            data: false, directions, title: 'Добавление аспиранта', buttonText: 'Добавить'
         })
         setIsOpenModal(true)
     }
 
     const editStudent = () => {
+        const directions = makeDirectionsArray()
         setModalInfo({
-            data: chosenStudent, title: 'Редактирование информации об аспиранте', buttonText: 'Сохранить'
+            data: chosenStudent, directions, title: 'Редактирование информации об аспиранте', buttonText: 'Сохранить'
         })
         setIsOpenModal(true)
     }
 
     const deleteStudent = () => {
+        const directions = makeDirectionsArray()
         setModalInfo({
-            data: chosenStudent, title: 'Удаление аспиранта', buttonText: 'Удалить'
+            data: chosenStudent, directions, title: 'Удаление аспиранта', buttonText: 'Удалить'
         })
         setIsOpenModal(true)
     }

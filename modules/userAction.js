@@ -28,10 +28,9 @@ module.exports = function (socket, userChangeStream, userId) {
             }
 
             transporter.sendMail(mailOptions, function(err,data){
-                if(err){
-                    console.log('Ошибка',err)
-                }else{
-                    console.log('lal')
+                if (err) {
+                    console.log('Ошибка', err)
+                } else {
                     console.log('Письмо отправлено')
                 }
             })
@@ -47,6 +46,7 @@ module.exports = function (socket, userChangeStream, userId) {
                         name: change.fullDocument.name,
                         secondName: change.fullDocument.secondName,
                         thirdName: change.fullDocument.thirdName,
+                        direction: change.fullDocument.direction,
                         admissionYear: change.fullDocument.admissionYear
                     }
 
@@ -77,6 +77,7 @@ module.exports = function (socket, userChangeStream, userId) {
                         name: response.name,
                         secondName: response.secondName,
                         thirdName: response.thirdName,
+                        direction: response.direction,
                         admissionYear: response.admissionYear,
                     }
 
@@ -96,6 +97,7 @@ module.exports = function (socket, userChangeStream, userId) {
                     name,
                     secondName,
                     thirdName,
+                    direction,
                     admissionYear
                 } = newUser
                 const randomstring = Math.random().toString(36).slice(-8)
@@ -107,6 +109,7 @@ module.exports = function (socket, userChangeStream, userId) {
                     name: name,
                     secondName: secondName,
                     thirdName: thirdName,
+                    direction: direction,
                     admissionYear: admissionYear,
                     password: hashedPassword
                 })
@@ -142,6 +145,7 @@ module.exports = function (socket, userChangeStream, userId) {
                 current.name == userForUpdate.name &&
                 current.secondName == userForUpdate.secondName &&
                 current.thirdName == userForUpdate.thirdName &&
+                current.direction == userForUpdate.direction &&
                 current.admissionYear == userForUpdate.admissionYear) {
                 socket.emit('updateUser', 'Вы не внесли никаких изменений')
                 return
@@ -155,6 +159,7 @@ module.exports = function (socket, userChangeStream, userId) {
                     "name": userForUpdate.name,
                     "secondName": userForUpdate.secondName,
                     "thirdName": userForUpdate.thirdName,
+                    "direction": userForUpdate.direction,
                     "admissionYear": userForUpdate.admissionYear
                 })
                 socket.emit('updateUser', 'Данные успешно изменены')

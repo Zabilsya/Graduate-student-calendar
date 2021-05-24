@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react'
+import React, { useContext, useEffect, useState, useRef } from 'react'
 import { StudentContext } from '../../context/StudentContext'
 import { AuthContext } from '../../context/AuthContext'
 import { useRequest } from '../../hooks/request.hook'
@@ -8,6 +8,7 @@ import './css/style.css'
 export const PersonalInfoPage = () => {
     const { userId } = useContext(AuthContext)
     const { students } = useContext(StudentContext)
+    const preloader = useRef()
     const request = useRequest()
     const [form, setForm] = useState({
         _id: userId, name: '', secondName: '', thirdName: '', email: '', admissionYear: ''
@@ -19,7 +20,9 @@ export const PersonalInfoPage = () => {
     }
 
     const saveChanges = async () => {
+        preloader.current.style.visibility = 'visible'
         await request('updateUser', form)
+        preloader.current.style.visibility = 'hidden'
     }
 
     useEffect(() => {
@@ -37,6 +40,7 @@ export const PersonalInfoPage = () => {
 
 
     return (
+        <>
         <div className="personal-info-wrapper">
             <h1 className="personail-info-title">Мой профиль</h1>
             <div className="personal-info">
@@ -67,5 +71,7 @@ export const PersonalInfoPage = () => {
               </div>
               </div>
         </div>
+        <div className="preloader" ref={preloader}><img src="preloader.svg" alt="" /></div>
+        </>
     )
 }
