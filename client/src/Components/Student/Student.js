@@ -53,7 +53,7 @@ export const Student = ({ data, directions, buttonText, onConfirm }) => {
                     <label htmlFor="thirdName">Отчество</label>
                 </div>
                 {
-                    newDirection ?
+                    (newDirection || directions.length == 0) ?
                         <div className="form-floating mb-3">
                             <input autoFocus type="text" className="form-control" name="direction" value={form.direction} onChange={changeInputHandler} id="direction" />
                             <label htmlFor="direction">Специальность</label>

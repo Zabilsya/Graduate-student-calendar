@@ -52,6 +52,9 @@ export const CalendarPage = () => {
     }
 
     const changeFilterHandler = event => {
+        if (event.target.name == 'year')
+        setFilter({ ...filter, student: 'default', [event.target.name]: event.target.value })
+        else
         setFilter({ ...filter, [event.target.name]: event.target.value })
     }
 

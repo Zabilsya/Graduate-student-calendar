@@ -1,36 +1,37 @@
 const User = require('./../models/User')
 const config = require('config')
 const bcrypt = require('bcryptjs')
+const {check, validationResult} = require('express-validator')
 
 const nodemailer = require('nodemailer') 
 
-
 module.exports = function (socket, userChangeStream, userId) {
 
-
-    function validateUser(operationType,email,name,secondName,direction,admissionYear){
-        
-        const emailre = new RegExp('^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$')
-        
+    function validateUser(operationType,email,name,secondName,direction,admissionYear){    
+        console.log(direction)
         let flag = true
 
-        if (!emailre.test(email)){
-            socket.emit(operationType, 'Некорректный email')
+        const incorrectEmailText = 'Некорректный email'
+        check('email', incorrectEmailText).normalizeEmail().isEmail()
+        const errorEmail = validationResult({email})
+
+        if (!errorEmail.isEmpty()){
+            socket.emit(operationType, incorrectEmailText)
             flag = false
         }
-        if (length(name) < 1){
+        if (name.length < 1){
             socket.emit(operationType, 'Некорректное имя')
             flag = false
         }
-        if (length(secondName < 1)){
-            socket.emit(operationType, 'Некорректноая фамилия')
+        if (secondName.length < 1){
+            socket.emit(operationType, 'Некорректная фамилия')
             flag = false
         }
-        if (length(direction) < 1) {
-            socket.emit(operationType, 'Некорректное направление')
+        if (direction.length < 1) {
+            socket.emit(operationType, 'Некорректная специальность')
             flag = false
         }
-        if (admissionYear < 2020 && admissionYear > new Date().getFullYear() + 1){
+        if (+admissionYear < 2020 || +admissionYear > new Date().getFullYear() + 1){
             socket.emit(operationType, 'Некорректный год')
             flag = false
         }
@@ -38,7 +39,7 @@ module.exports = function (socket, userChangeStream, userId) {
     }
 
     this.subscribeToEvents = function () {
-
+        
         function sendPassword(generatedPassword,userEmail,name) {
             
             let transporter = nodemailer.createTransport({
@@ -150,9 +151,6 @@ module.exports = function (socket, userChangeStream, userId) {
     
                     socket.emit('addUser', 'Аспирант успешно добавлен в систему!')
                 }
-                else{
-                    throw new Error('Ошибка валидации')
-                }
                 
             } catch (e) {
                 socket.emit('addUser', 'Ошибка!')
@@ -207,9 +205,7 @@ module.exports = function (socket, userChangeStream, userId) {
                     socket.emit('updateUser', 'Данные успешно изменены')
                 
                 }
-                else{
-                    throw new Error('Ошибка валидации')
-                }
+              
             }catch (e) {
                 socket.emit('updateUser', 'Ошибка!')
             }            

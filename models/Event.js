@@ -39,6 +39,10 @@ const schema = new Schema({
     target: {
         type: String,
         required: true
+    },
+    owner: {
+        type: String,
+        required: true
     }
 })
 

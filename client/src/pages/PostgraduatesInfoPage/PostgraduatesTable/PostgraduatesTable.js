@@ -81,12 +81,12 @@ export const PostgraduatesTable = ({ students, chooseStudent, chosenStudent }) =
                             <div className="year-filter filter">
                                 <label htmlFor="year-filter">Год поступления:</label>
                                 <select className="custom-select" name="year" id="year-filter" value={filter.year} onChange={changeFilterHandler}>
+                                <option value='default'>Все</option>
                                     {
                                         years.map((year, index) => (
                                             <option key={index} value={year}>{year}</option>
                                         ))
                                     }
-                                    <option value='default'>Все</option>
                                 </select>
                             </div>
                             <div className="direction-filter filter">

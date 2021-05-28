@@ -25,7 +25,6 @@ export const ModalStudent = ({ modalInfo, onClose }) => {
             default: break
         }
         preloader.current.style.visibility = 'hidden'
-        onClose()
     }
 
     return (

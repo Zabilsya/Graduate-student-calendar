@@ -12,19 +12,19 @@ export const useAuth = () => {
     setToken(jwtToken)
     setUserId(id)
     setSocket(io())
-
     localStorage.setItem(storageName, JSON.stringify({
       userId: id, token: jwtToken
     }))
   }, [])
 
 
-  const logout = useCallback(() => {
+  const logout = () => {
+    socket.disconnect()
     setToken(null)
     setUserId(null)
     setSocket(null)
     localStorage.removeItem(storageName)
-  }, [])
+  }
 
   useEffect(() => {
     const data = JSON.parse(localStorage.getItem(storageName))

@@ -1,6 +1,5 @@
-import React, { useEffect, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import moment from "moment";
-import MomentUtils from "@date-io/moment";
 import 'date-fns'
 import DateFnsUtils from '@date-io/date-fns'
 import {
@@ -11,10 +10,12 @@ import {
 import eventTypes from '../../data/eventTypes'
 
 import './css/style.css'
+import { AuthContext } from '../../context/AuthContext';
 
 export const Event = ({ data, day, reveal, changeModalMode, onConfirmChanges, eventTarget }) => {
+    const { userId } = useContext(AuthContext)
     const [form, setForm] = useState({
-        _id: '', name: '', description: '', startDt: day, priority: 'low', type: 'Проект', notificationPeriod: '1', info: '', target: eventTarget
+        _id: '', name: '', description: '', startDt: day, priority: 'low', type: 'Проект', notificationPeriod: '1', info: '', target: eventTarget, owner: userId
     })
     const [eventVisibility, setEventVisibility] = useState(reveal)
     const [editingMode, setEditingMode] = useState(reveal)
@@ -37,7 +38,8 @@ export const Event = ({ data, day, reveal, changeModalMode, onConfirmChanges, ev
                 type: data.type,
                 notificationPeriod: data.notificationPeriod,
                 info: data.info,
-                target: prev.target
+                target: data.target,
+                owner: data.owner 
             }))
         }
         if (reveal) {
@@ -66,7 +68,9 @@ export const Event = ({ data, day, reveal, changeModalMode, onConfirmChanges, ev
                 priority: data.priority,
                 type: data.type,
                 notificationPeriod: data.notificationPeriod,
-                info: data.info
+                info: data.info,
+                target: data.target,
+                owner: data.owner
             })
         }
     }
@@ -104,12 +108,18 @@ export const Event = ({ data, day, reveal, changeModalMode, onConfirmChanges, ev
 
             <div className={eventVisibility ? 'event-wrapper show' : 'event-wrapper hide'}>
                 <div className="form-floating mb-3">
-                    <input type="text" className="form-control" name="name" value={form.name} onChange={changeInputHandler} readOnly={!editingMode} />
+                    <input 
+                    type="text" 
+                    className="form-control" 
+                    name="name" 
+                    value={form.name} 
+                    onChange={changeInputHandler} 
+                    readOnly={!editingMode || form.owner != userId} />
                     <label htmlFor="name">Название события</label>
                 </div>
                 <div className="select">
                     <label htmlFor="type">Тип события</label>
-                    <select className="custom-select" name="type" value={form.type} onChange={changeInputHandler} disabled={!editingMode}>
+                    <select className="custom-select" name="type" value={form.type} onChange={changeInputHandler} disabled={!editingMode || form.owner != userId}>
                         <option value="Проект">Проект</option>
                         <option value="Экзамен">Экзамен</option>
                         <option value="Зачет">Зачёт</option>
@@ -125,7 +135,7 @@ export const Event = ({ data, day, reveal, changeModalMode, onConfirmChanges, ev
                 <div className="form-floating mb-3 data time">
                     <MuiPickersUtilsProvider utils={DateFnsUtils}>
                         <DatePicker
-                            readOnly={!editingMode}
+                            readOnly={!editingMode || form.owner != userId}
                             variant="inline"
                             ampm={false}
                             label="Дата"
@@ -134,7 +144,7 @@ export const Event = ({ data, day, reveal, changeModalMode, onConfirmChanges, ev
                             format="dd/MM/yyyy"
                         />
                         <TimePicker
-                            readOnly={!editingMode}
+                            readOnly={!editingMode || form.owner != userId}
                             ampm={false}
                             label="Время"
                             value={form.startDt}
@@ -145,19 +155,43 @@ export const Event = ({ data, day, reveal, changeModalMode, onConfirmChanges, ev
                 <h6 className="label">Приоритет</h6>
                 <div className="form-floating mb-3 data priority">
                     <div className="form-check low">
-                        <input className="form-check-input" type="radio" onChange={changeInputHandler} value="low" checked={form.priority === "low"} name="priority" id="lowRadio" disabled={!editingMode} />
+                        <input 
+                        className="form-check-input" 
+                        type="radio" 
+                        onChange={changeInputHandler} 
+                        value="low" 
+                        checked={form.priority === "low"} 
+                        name="priority" 
+                        id="lowRadio" 
+                        disabled={!editingMode || form.owner != userId} />
                         <label className="form-check-label" htmlFor="lowRadio">
                             Низкий
                     </label>
                     </div>
                     <div className="form-check medium">
-                        <input className="form-check-input" type="radio" onChange={changeInputHandler} value="medium" checked={form.priority === "medium"} name="priority" id="mediumRadio" disabled={!editingMode} />
+                        <input 
+                        className="form-check-input" 
+                        type="radio" 
+                        onChange={changeInputHandler} 
+                        value="medium" 
+                        checked={form.priority === "medium"} 
+                        name="priority" 
+                        id="mediumRadio" 
+                        disabled={!editingMode || form.owner != userId} />
                         <label className="form-check-label" htmlFor="mediumRadio">
                             Средний
                     </label>
                     </div>
                     <div className="form-check high">
-                        <input className="form-check-input" type="radio" onChange={changeInputHandler} value="high" checked={form.priority === "high"} name="priority" id="highRadio" disabled={!editingMode} />
+                        <input 
+                        className="form-check-input" 
+                        type="radio" 
+                        onChange={changeInputHandler} 
+                        value="high" 
+                        checked={form.priority === "high"} 
+                        name="priority" 
+                        id="highRadio" 
+                        disabled={!editingMode || form.owner != userId} />
                         <label className="form-check-label" htmlFor="highRadio">
                             Высокий
                     </label>
@@ -166,7 +200,13 @@ export const Event = ({ data, day, reveal, changeModalMode, onConfirmChanges, ev
 
                 <div className="select">
                     <label htmlFor="notificationPeriod">Частота напоминания</label>
-                    <select className="custom-select" name="notificationPeriod" id="notificationPeriod" value={form.notificationPeriod.toString()} onChange={changeInputHandler} disabled={!editingMode}>
+                    <select 
+                    className="custom-select" 
+                    name="notificationPeriod" 
+                    id="notificationPeriod" 
+                    value={form.notificationPeriod.toString()} 
+                    onChange={changeInputHandler} 
+                    disabled={!editingMode}>
                         <option value="1">Каждый день</option>
                         <option value="7">Каждую неделю</option>
                         <option value="30">Каждый месяц</option>
@@ -175,9 +215,14 @@ export const Event = ({ data, day, reveal, changeModalMode, onConfirmChanges, ev
 
                 <div className={eventVisibility ? 'modal-buttons show' : 'modal-buttons hide'}>
                     <button className="modal-footer-button" onClick={editingMode ? saveChanges : turnOnEditingMode}>{editingMode ? 'Сохранить' : 'Редактировать'}</button>
-                    <button className="modal-footer-button" onClick={editingMode ? cancelAdding : deleteEvent}>{editingMode ? 'Отменить' : 'Удалить'}</button>
+                    {
+                        editingMode ?
+                        <button className="modal-footer-button" onClick={cancelAdding}>{'Отменить'}</button>
+                         : form.owner == userId &&
+                        <button className="modal-footer-button" onClick={deleteEvent}>{'Удалить'}</button>
+                    }
+        
                 </div>
-
             </div>
 
         </>

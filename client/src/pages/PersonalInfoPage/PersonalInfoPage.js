@@ -11,7 +11,7 @@ export const PersonalInfoPage = () => {
     const preloader = useRef()
     const request = useRequest()
     const [form, setForm] = useState({
-        _id: userId, name: '', secondName: '', thirdName: '', email: '', admissionYear: ''
+        _id: userId, name: '', secondName: '', thirdName: '', email: '', direction: '', admissionYear: ''
     })
     const isAdmin = userId == '604fb74012c7d21c984aed35'
 
@@ -33,6 +33,7 @@ export const PersonalInfoPage = () => {
             secondName: student.secondName,
             thirdName: student.thirdName,
             email: student.email,
+            direction: student.direction,
             admissionYear: student.admissionYear
         })
 

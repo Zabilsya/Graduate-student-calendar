@@ -10,6 +10,7 @@ export const useSchedule = socket => {
     if (socket) {
       getEvents()
       socket.on('newEvent', message => {
+        console.log('прилетел')
         message.startDt = moment(message.startDt)
         setEvents(events => ([...events, message]))
       })

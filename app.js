@@ -51,7 +51,6 @@ async function start() {
         io.sockets.on('connection', socket => {
 
                     socket.on('enter', userId => {
-
                         var userAction = new UserAction(socket, userChangeStream, userId)
 
                         userAction.subscribeToEvents()
@@ -67,7 +66,13 @@ async function start() {
                         notificationAction.subscribeToNotifications()
                         notificationAction.getNotifications()
                     })
+
+                    socket.on('disconnecting', (kkk) => {
+                        console.log('disconnect')
+                    })
         })
+
+       
 
         cron.schedule('* * * * *', function(){
     

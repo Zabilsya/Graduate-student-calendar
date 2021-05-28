@@ -9,8 +9,8 @@ module.exports = function (socket, eventChangeStream, userId) {
 
     function validateAction(operationType,name){
         
-        if (length(name) < 1){
-            socket.emit(operationType, 'Некорректное название')
+        if (name.length < 1){
+            socket.emit(operationType, 'Вы не ввели название мероприятия!')
             return false
         }
 
@@ -21,7 +21,7 @@ module.exports = function (socket, eventChangeStream, userId) {
 
     this.subscribeToEvents = function () {
         let deletedEvent;
-
+    
         eventChangeStream.on("change", async (change) => {
 
             const eventId = change.documentKey._id
@@ -39,11 +39,12 @@ module.exports = function (socket, eventChangeStream, userId) {
                         notificationPeriod: change.fullDocument.notificationPeriod,
                         info: change.fullDocument.info,
                         nextNotifficationDt: change.fullDocument.nextNotifficationDt,
-                        target: change.fullDocument.target
+                        target: change.fullDocument.target,
+                        owner: change.fullDocument.owner
                     }
                     
 
-                    if (userId == config.get('superuserId') || (userId == newEvent.target)) {
+                    if ((userId == config.get('superuserId') && newEvent.owner == config.get('superuserId')) || (userId == newEvent.target)) {
                         socket.emit("newEvent", newEvent)
 
                     } else if (newEvent.target.length == 'YYYY'.length) {
@@ -57,9 +58,7 @@ module.exports = function (socket, eventChangeStream, userId) {
                         if (admissionYear == newEvent.target) {
                             socket.emit("newEvent", newEvent)
                         }
-
                     }
-
                     
                     break;
 
@@ -108,9 +107,10 @@ module.exports = function (socket, eventChangeStream, userId) {
                         type: response.type,
                         notificationPeriod: response.notificationPeriod,
                         info: response.info,
-                        target: response.target
+                        target: response.target,
+                        owner: response.owner
                     }
-                    if (userId == config.get('superuserId') || (userId == response.target)) {
+                    if ((userId == config.get('superuserId') && response.owner == config.get('superuserId')) || (userId == response.target)) {
 
                         socket.emit("updatedEvent", updatedEvent)
 
@@ -132,7 +132,6 @@ module.exports = function (socket, eventChangeStream, userId) {
 
         socket.on('addEvent', async (newEvent) => {
             try {
-
                 let {
                     name,
                     description,
@@ -141,10 +140,12 @@ module.exports = function (socket, eventChangeStream, userId) {
                     type,
                     notificationPeriod,
                     info,
-                    target
+                    target,
+                    owner
                 } = newEvent
     
                 if(validateAction('addEvent', name)){
+                    
                     const notPeriod = Number(notificationPeriod)
                     
                     const momentTime = moment(startDt)
@@ -163,7 +164,8 @@ module.exports = function (socket, eventChangeStream, userId) {
                         notificationPeriod: notPeriod,
                         info: info,
                         nextNotifficationDt: nextNotifficationDt,
-                        target: target
+                        target: target,
+                        owner: owner
                     })
                     
                     await event.save()
@@ -185,9 +187,6 @@ module.exports = function (socket, eventChangeStream, userId) {
                     
                     await newNotification.save()
 
-                }
-                else{
-                    throw new Error('Ошибка валидации')
                 }
                 
             } catch (e) {
@@ -266,10 +265,11 @@ module.exports = function (socket, eventChangeStream, userId) {
                         "notificationPeriod": eventForUpdate.notificationPeriod,
                         "info": eventForUpdate.info,
                         "nextNotifficationDt": eventForUpdate.nextNotifficationDt,
-                        "target": eventForUpdate.target
+                        "target": eventForUpdate.target,
+                        "owner": eventForUpdate.owner
                     })
                     socket.emit('updateEvent', 'Мероприятие успешно изменено')
-    
+              
                     // Удалить уведомление об апдейте
                     await Notification.deleteOne({
                         "eventId": eventForUpdate._id,
@@ -292,12 +292,9 @@ module.exports = function (socket, eventChangeStream, userId) {
     
                     await newNotification.save()
                 }
-                else{
-                    throw new Error('Ошибка валидации')
-                }
 
             } catch (e) {
-                socket.emit('updateEvent', e)
+                socket.emit('updateEvent', 'Ошибка!')
             }
         })
 
@@ -324,7 +321,9 @@ module.exports = function (socket, eventChangeStream, userId) {
                     })
 
                 } else {
-                    userEvents = await Event.find()
+                    userEvents = await Event.find({
+                        "owner": config.get('superuserId')
+                    })
                 }
                 socket.emit('getEvents', userEvents)
             } catch (e) {
