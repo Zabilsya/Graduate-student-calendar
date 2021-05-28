@@ -7,6 +7,16 @@ const config = require('config')
 
 module.exports = function (socket, eventChangeStream, userId) {
 
+    function validateAction(operationType,name){
+        
+        if (length(name) < 1){
+            socket.emit(operationType, 'Некорректное название')
+            return false
+        }
+
+        return true
+    }
+
     let newNotification
 
     this.subscribeToEvents = function () {
@@ -122,6 +132,7 @@ module.exports = function (socket, eventChangeStream, userId) {
 
         socket.on('addEvent', async (newEvent) => {
             try {
+
                 let {
                     name,
                     description,
@@ -132,46 +143,53 @@ module.exports = function (socket, eventChangeStream, userId) {
                     info,
                     target
                 } = newEvent
+    
+                if(validateAction('addEvent', name)){
+                    const notPeriod = Number(notificationPeriod)
+                    
+                    const momentTime = moment(startDt)
+                    startDt = new Date(momentTime.format().slice(0, -8) + '00').toISOString()
+    
+                    const date = momentTime.add(notPeriod, 'days')
+    
+                    const nextNotifficationDt = new Date(date.format().slice(0, -8) + '00').toISOString()
+    
+                    const event = new Event({
+                        name: name,
+                        description: description,
+                        startDt: startDt,
+                        priority: priority,
+                        type: type,
+                        notificationPeriod: notPeriod,
+                        info: info,
+                        nextNotifficationDt: nextNotifficationDt,
+                        target: target
+                    })
+                    
+                    await event.save()
+                    socket.emit('addEvent', 'Мероприятие успешно добавлено в систему!')
+    
+                    // create notification
+                    const temp = await Event.findOne({"name": name, "startDt": startDt})
+                    const createDt = new Date(moment().format().slice(0, -8) + '00').toISOString()
+    
+                    newNotification = new Notification({
+                        target: temp.target,
+                        eventId: temp._id.toString(),
+                        eventName: temp.name,
+                        createDt: createDt,
+                        type: 'insert',
+                        daysLeft: null,
+                        viewers: []
+                    })
+                    
+                    await newNotification.save()
 
-                const notPeriod = Number(notificationPeriod)
+                }
+                else{
+                    throw new Error('Ошибка валидации')
+                }
                 
-                const momentTime = moment(startDt)
-                startDt = new Date(momentTime.format().slice(0, -8) + '00').toISOString()
-
-                const date = momentTime.add(notPeriod, 'days')
-
-                const nextNotifficationDt = new Date(date.format().slice(0, -8) + '00').toISOString()
-
-                const event = new Event({
-                    name: name,
-                    description: description,
-                    startDt: startDt,
-                    priority: priority,
-                    type: type,
-                    notificationPeriod: notPeriod,
-                    info: info,
-                    nextNotifficationDt: nextNotifficationDt,
-                    target: target
-                })
-                
-                await event.save()
-                socket.emit('addEvent', 'Мероприятие успешно добавлено в систему!')
-
-                // create notification
-                const temp = await Event.findOne({"name": name, "startDt": startDt})
-                const createDt = new Date(moment().format().slice(0, -8) + '00').toISOString()
-
-                newNotification = new Notification({
-                    target: temp.target,
-                    eventId: temp._id.toString(),
-                    eventName: temp.name,
-                    createDt: createDt,
-                    type: 'insert',
-                    daysLeft: null,
-                    viewers: []
-                })
-                
-                await newNotification.save()
             } catch (e) {
                 socket.emit('addEvent', 'Ошибка!')
             }
@@ -235,45 +253,51 @@ module.exports = function (socket, eventChangeStream, userId) {
             }
 
             try {
-                await Event.updateOne({
-                    "_id": eventForUpdate._id
-                }, {
-                    "name": eventForUpdate.name,
-                    "description": eventForUpdate.description,
-                    "startDt": eventForUpdate.startDt,
-                    "priority": eventForUpdate.priority,
-                    "type": eventForUpdate.type,
-                    "notificationPeriod": eventForUpdate.notificationPeriod,
-                    "info": eventForUpdate.info,
-                    "nextNotifficationDt": eventForUpdate.nextNotifficationDt,
-                    "target": eventForUpdate.target
-                })
-                socket.emit('updateEvent', 'Мероприятие успешно изменено')
+                if (validateAction('updateEvent', eventForUpdate.name)){
 
-                // Удалить уведомление об апдейте
-                await Notification.deleteOne({
-                    "eventId": eventForUpdate._id,
-                    "type": "update"
-                })
-
-
-                // Создать новое уведомление об апдейте
-                const createDt = new Date(moment().format().slice(0, -8) + '00').toISOString()
-
-                newNotification = new Notification({
-                    target: eventForUpdate.target,
-                    eventId: eventForUpdate._id,
-                    eventName: eventForUpdate.name,
-                    createDt: createDt,
-                    type: 'update',
-                    daysLeft: null,
-                    viewers: []
-                })
-
-                await newNotification.save()
+                    await Event.updateOne({
+                        "_id": eventForUpdate._id
+                    }, {
+                        "name": eventForUpdate.name,
+                        "description": eventForUpdate.description,
+                        "startDt": eventForUpdate.startDt,
+                        "priority": eventForUpdate.priority,
+                        "type": eventForUpdate.type,
+                        "notificationPeriod": eventForUpdate.notificationPeriod,
+                        "info": eventForUpdate.info,
+                        "nextNotifficationDt": eventForUpdate.nextNotifficationDt,
+                        "target": eventForUpdate.target
+                    })
+                    socket.emit('updateEvent', 'Мероприятие успешно изменено')
+    
+                    // Удалить уведомление об апдейте
+                    await Notification.deleteOne({
+                        "eventId": eventForUpdate._id,
+                        "type": "update"
+                    })
+    
+    
+                    // Создать новое уведомление об апдейте
+                    const createDt = new Date(moment().format().slice(0, -8) + '00').toISOString()
+    
+                    newNotification = new Notification({
+                        target: eventForUpdate.target,
+                        eventId: eventForUpdate._id,
+                        eventName: eventForUpdate.name,
+                        createDt: createDt,
+                        type: 'update',
+                        daysLeft: null,
+                        viewers: []
+                    })
+    
+                    await newNotification.save()
+                }
+                else{
+                    throw new Error('Ошибка валидации')
+                }
 
             } catch (e) {
-                socket.emit('updateEvent', 'Ошибка!')
+                socket.emit('updateEvent', e)
             }
         })
 
