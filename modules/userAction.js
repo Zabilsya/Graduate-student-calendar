@@ -7,6 +7,36 @@ const nodemailer = require('nodemailer')
 
 module.exports = function (socket, userChangeStream, userId) {
 
+
+    function validateUser(operationType,email,name,secondName,direction,admissionYear){
+        
+        const emailre = new RegExp('^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$')
+        
+        let flag = true
+
+        if (!emailre.test(email)){
+            socket.emit(operationType, 'Некорректный email')
+            flag = false
+        }
+        if (length(name) < 1){
+            socket.emit(operationType, 'Некорректное имя')
+            flag = false
+        }
+        if (length(secondName < 1)){
+            socket.emit(operationType, 'Некорректноая фамилия')
+            flag = false
+        }
+        if (length(direction) < 1) {
+            socket.emit(operationType, 'Некорректное направление')
+            flag = false
+        }
+        if (admissionYear < 2020 && admissionYear > new Date().getFullYear() + 1){
+            socket.emit(operationType, 'Некорректный год')
+            flag = false
+        }
+        return flag
+    }
+
     this.subscribeToEvents = function () {
 
         function sendPassword(generatedPassword,userEmail,name) {
@@ -100,22 +130,30 @@ module.exports = function (socket, userChangeStream, userId) {
                     direction,
                     admissionYear
                 } = newUser
-                const randomstring = Math.random().toString(36).slice(-8)
-                sendPassword(randomstring,email,name)                
-                console.log(randomstring)
-                const hashedPassword = await bcrypt.hash(randomstring, 12)
-                const user = new User({
-                    email: email,
-                    name: name,
-                    secondName: secondName,
-                    thirdName: thirdName,
-                    direction: direction,
-                    admissionYear: admissionYear,
-                    password: hashedPassword
-                })
-                await user.save()
 
-                socket.emit('addUser', 'Аспирант успешно добавлен в систему!')
+                if(validateUser('addUser',email,name,secondName,direction,admissionYear))
+                {
+                    const randomstring = Math.random().toString(36).slice(-8)
+                    sendPassword(randomstring,email,name)                
+                    console.log(randomstring)
+                    const hashedPassword = await bcrypt.hash(randomstring, 12)
+                    const user = new User({
+                        email: email,
+                        name: name,
+                        secondName: secondName,
+                        thirdName: thirdName,
+                        direction: direction,
+                        admissionYear: admissionYear,
+                        password: hashedPassword
+                    })
+                    await user.save()
+    
+                    socket.emit('addUser', 'Аспирант успешно добавлен в систему!')
+                }
+                else{
+                    throw new Error('Ошибка валидации')
+                }
+                
             } catch (e) {
                 socket.emit('addUser', 'Ошибка!')
             }
@@ -141,6 +179,7 @@ module.exports = function (socket, userChangeStream, userId) {
                 "_id": userForUpdate._id
             })
 
+              
             if (current.email == userForUpdate.email &&
                 current.name == userForUpdate.name &&
                 current.secondName == userForUpdate.secondName &&
@@ -152,20 +191,28 @@ module.exports = function (socket, userChangeStream, userId) {
             }
 
             try {
-                await User.updateOne({
-                    "_id": userForUpdate._id
-                }, {
-                    "email": userForUpdate.email,
-                    "name": userForUpdate.name,
-                    "secondName": userForUpdate.secondName,
-                    "thirdName": userForUpdate.thirdName,
-                    "direction": userForUpdate.direction,
-                    "admissionYear": userForUpdate.admissionYear
-                })
-                socket.emit('updateUser', 'Данные успешно изменены')
-            } catch (e) {
+
+                if(validateUser('updateUser',userForUpdate.email,userForUpdate.name,userForUpdate.secondName,userForUpdate.direction,userForUpdate.admissionYear)){
+                
+                    await User.updateOne({
+                        "_id": userForUpdate._id
+                    }, {
+                        "email": userForUpdate.email,
+                        "name": userForUpdate.name,
+                        "secondName": userForUpdate.secondName,
+                        "thirdName": userForUpdate.thirdName,
+                        "direction": userForUpdate.direction,
+                        "admissionYear": userForUpdate.admissionYear
+                    })
+                    socket.emit('updateUser', 'Данные успешно изменены')
+                
+                }
+                else{
+                    throw new Error('Ошибка валидации')
+                }
+            }catch (e) {
                 socket.emit('updateUser', 'Ошибка!')
-            }
+            }            
         })
     }
 
