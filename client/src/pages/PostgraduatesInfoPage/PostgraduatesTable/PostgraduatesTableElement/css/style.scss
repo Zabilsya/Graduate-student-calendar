@@ -1,3 +1,11 @@
 .chosen-student {
     background-color: yellow;
 }
+
+.main-table-header-item:hover {
+    cursor: pointer;
+}
+
+.main-table-header-item:first-child:hover {
+    cursor: initial;
+}

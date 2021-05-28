@@ -22,6 +22,8 @@ export const useStudents = socket => {
           setChosenStudent(newArr[0])
           else if (newArr.length > 1)
           setChosenStudent(newArr[1])
+          else 
+          setChosenStudent(false)
           return newArr
         })
       })
@@ -49,6 +51,7 @@ export const useStudents = socket => {
     setChosenStudent(users[0])
     else if (users.length > 1)
     setChosenStudent(users[1])
+    else setChosenStudent(false)
   }
 
   return { students, chosenStudent, setChosenStudent }

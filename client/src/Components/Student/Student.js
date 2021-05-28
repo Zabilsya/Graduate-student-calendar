@@ -56,18 +56,18 @@ export const Student = ({ data, directions, buttonText, onConfirm }) => {
                     newDirection ?
                         <div className="form-floating mb-3">
                             <input autoFocus type="text" className="form-control" name="direction" value={form.direction} onChange={changeInputHandler} id="direction" />
-                            <label htmlFor="direction">Направление</label>
+                            <label htmlFor="direction">Специальность</label>
                         </div>
                         :
                         <div className="select">
-                            <label htmlFor="direction">Направление</label>
+                            <label htmlFor="direction">Специальность</label>
                             <select className="custom-select" name="direction" value={form.direction} onChange={changeDirectionHandler} disabled={disabledInput}>
                                 {
                                     directions.map((item, index) => (
                                         <option key={index} value={item}>{item}</option>
                                     ))
                                 }
-                                <option value="New">Добавить новое</option>
+                                <option value="New">Добавить новую</option>
                             </select>
                         </div>
                 }

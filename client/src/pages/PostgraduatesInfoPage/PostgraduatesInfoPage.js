@@ -62,9 +62,9 @@ export const PostgraduatesInfoPage = () => {
                 <PostgraduatesTable students={students} chooseStudent={chooseStudent} chosenStudent={chosenStudent}/>
             </div>
                 <div className="buttons">
-                {students.length > 0 && <button type="button" className="button" onClick={editStudent}>Редактировать информацию об аспиранте</button>}
+                {chosenStudent && <button type="button" className="button" onClick={editStudent}>Редактировать информацию об аспиранте</button>}
                     <button type="button" className="button" onClick={addStudent}>Добавить аспиранта</button>
-                {students.length > 0 && <button type="button" className="button" onClick={deleteStudent}>Удалить аспиранта</button>}
+                {chosenStudent && <button type="button" className="button" onClick={deleteStudent}>Удалить аспиранта</button>}
                 </div>
             {isOpenModal && 
                 <ModalStudent modalInfo={modalInfo} onClose={closeModal}/>
