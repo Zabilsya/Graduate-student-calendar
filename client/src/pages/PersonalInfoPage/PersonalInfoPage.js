@@ -11,7 +11,7 @@ export const PersonalInfoPage = () => {
     const preloader = useRef()
     const request = useRequest()
     const [form, setForm] = useState({
-        _id: userId, name: '', secondName: '', thirdName: '', email: '', direction: '', admissionYear: ''
+        _id: userId, name: '', secondName: '', thirdName: '', email: '', direction: '', password: '', admissionYear: ''
     })
     const isAdmin = userId == '604fb74012c7d21c984aed35'
 
@@ -27,6 +27,7 @@ export const PersonalInfoPage = () => {
 
     useEffect(() => {
         const student = students.filter(item => item._id == userId)[0]
+        console.log(student)
         setForm({
             _id: student._id,
             name: student.name,
@@ -34,7 +35,8 @@ export const PersonalInfoPage = () => {
             thirdName: student.thirdName,
             email: student.email,
             direction: student.direction,
-            admissionYear: student.admissionYear
+            admissionYear: student.admissionYear,
+            password: ''
         })
 
     }, [students])
@@ -61,11 +63,21 @@ export const PersonalInfoPage = () => {
                 <input type="email" className="form-control" name="email" value={form.email} onChange={changeInputHandler} id="email" />
                 <label htmlFor="email">Электронная почта</label>
             </div>
+            <div className="form-floating mb-3">
+                <input type="password" className="form-control" name="password" onChange={changeInputHandler} value={form.password} id="password"/>
+                <label htmlFor="password">Новый пароль</label>
+            </div>
             {!isAdmin  &&
-                <div className="form-floating mb-3">
-                    <input type="number" className="form-control" name="admissionYear" onChange={changeInputHandler} value={form.admissionYear} id="admissionYear" disabled />
-                    <label htmlFor="admissionYear">Год поступления</label>
-                </div>
+                <>
+                    <div className="form-floating mb-3">
+                        <input type="text" className="form-control" name="direction" onChange={changeInputHandler} value={form.direction} id="direction" disabled />
+                        <label htmlFor="admissionYear">Специальность</label>
+                    </div>
+                     <div className="form-floating mb-3">
+                        <input type="number" className="form-control" name="admissionYear" onChange={changeInputHandler} value={form.admissionYear} id="admissionYear" disabled />
+                        <label htmlFor="admissionYear">Год поступления</label>
+                    </div>
+                </>
             }
               <div className="form-floating form-floating-last">
                     <button className="button" onClick={saveChanges}>Сохранить данные</button>

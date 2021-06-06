@@ -8,7 +8,7 @@
         table-layout: fixed !important;
 
     th {
-        width: 9%;
+        width: 7%;
         padding: 0;
         border-right: 1px solid #000000;
     }
@@ -18,11 +18,11 @@
         border-left: 1px solid #000000;
     }
 
-    th:nth-child(5) {
+    th:nth-child(6) {
         width: 13%;
     }
 
-    th:nth-child(6) {
+    th:nth-child(7) {
         width: 4%;
         font-size: 12px;
     }
@@ -49,18 +49,18 @@
             &-item {
                 overflow: auto;
                 cursor: pointer;
-                width: 9%;
+                width: 7%;
             }
 
             &-item:nth-child(1) {
                 width: 2%;
             }
     
-            &-item:nth-child(5) {
+            &-item:nth-child(6) {
                 width: 13%;
             }
     
-            &-item:nth-child(6) {
+            &-item:nth-child(7) {
                 width: 4%;
             }
 

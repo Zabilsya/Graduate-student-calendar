@@ -4,7 +4,7 @@ import React, { useEffect, useState } from 'react'
 
 export const Student = ({ data, directions, buttonText, onConfirm }) => {
     const [form, setForm] = useState({
-        _id: '', name: '', secondName: '', thirdName: '', direction: '', email: '', admissionYear: ''
+        _id: '', name: '', secondName: '', thirdName: '', direction: '', email: '', admissionYear: '', password: ''
     })
     const [newDirection, setNewDirection] = useState(false)
 
@@ -19,7 +19,8 @@ export const Student = ({ data, directions, buttonText, onConfirm }) => {
                 thirdName: data.thirdName,
                 direction: data.direction,
                 email: data.email,
-                admissionYear: data.admissionYear
+                admissionYear: data.admissionYear,
+                password: ''
             })
         }
     }, [data])

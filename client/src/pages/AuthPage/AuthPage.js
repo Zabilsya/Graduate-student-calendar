@@ -1,5 +1,5 @@
 import axios from 'axios';
-import React, {useState, useContext} from 'react'
+import React, {useState, useContext, useRef} from 'react'
 import { useRequest } from '../../hooks/request.hook';
 import {AuthContext} from './../../context/AuthContext'
 import URLs from './../../URLs';
@@ -17,11 +17,14 @@ export const AuthPage = () => {
         email: '', password: ''
     });
 
+    const preloader = useRef()
+
     const changeInputHandler = event => {
         setForm({ ...form, [event.target.name]: event.target.value })
     }
 
     const loginHandler = async () => {
+        preloader.current.style.visibility = 'visible'
         let response = await fetch('/api/auth/login', {
             method: 'POST',
             headers: {
@@ -30,6 +33,7 @@ export const AuthPage = () => {
             body: JSON.stringify(form)
           })
         const result = await response.json()
+        preloader.current.style.visibility = 'hidden'
         if(!response.ok) {
             window.M.toast({html: result.message, classes: "message", displayLength: 2000})
             return
@@ -38,6 +42,7 @@ export const AuthPage = () => {
     }
 
     return (
+        <>
         <div className="auth">
             <div className="authorization">
                 <h2 className='authorization-title'>Авторизация</h2>
@@ -54,5 +59,7 @@ export const AuthPage = () => {
                 </div>
             </div>
         </div>
+        <div className="preloader" ref={preloader}><img src="preloader.svg" alt="" /></div>
+        </>
     )
 }

@@ -177,13 +177,33 @@ module.exports = function (socket, userChangeStream, userId) {
                 "_id": userForUpdate._id
             })
 
-              
+            let newPassword
+            const passwordWithoutSpaces = userForUpdate.password.replace(/\s/g, '')
+
+            if (userForUpdate.password.length > 0 && !passwordWithoutSpaces) {
+                socket.emit('updateUser', 'Вы ввели некорректный пароль!')
+                return
+            }
+
+            
+            if (passwordWithoutSpaces && passwordWithoutSpaces.length < 6) {
+                socket.emit('updateUser', 'Длина пароля должна быть не менее 6 символов!')
+                return
+            }
+
+            if (passwordWithoutSpaces) {
+                newPassword = await bcrypt.hash(userForUpdate.password, 12)
+            } else {
+                newPassword = current.password
+            }
+
             if (current.email == userForUpdate.email &&
                 current.name == userForUpdate.name &&
                 current.secondName == userForUpdate.secondName &&
                 current.thirdName == userForUpdate.thirdName &&
                 current.direction == userForUpdate.direction &&
-                current.admissionYear == userForUpdate.admissionYear) {
+                current.admissionYear == userForUpdate.admissionYear &&
+                current.password == newPassword) {
                 socket.emit('updateUser', 'Вы не внесли никаких изменений')
                 return
             }
@@ -200,7 +220,8 @@ module.exports = function (socket, userChangeStream, userId) {
                         "secondName": userForUpdate.secondName,
                         "thirdName": userForUpdate.thirdName,
                         "direction": userForUpdate.direction,
-                        "admissionYear": userForUpdate.admissionYear
+                        "admissionYear": userForUpdate.admissionYear,
+                        "password": newPassword
                     })
                     socket.emit('updateUser', 'Данные успешно изменены')
                 

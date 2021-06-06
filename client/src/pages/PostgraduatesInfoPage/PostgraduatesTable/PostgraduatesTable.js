@@ -110,6 +110,7 @@ export const PostgraduatesTable = ({ students, chooseStudent, chosenStudent }) =
                                 <th className="main-table-header-item" id="secondName" onClick={applySort}>Фамилия</th>
                                 <th className="main-table-header-item" id="name" onClick={applySort}>Имя</th>
                                 <th className="main-table-header-item" id="thirdName" onClick={applySort}>Отчество</th>
+                                <th className="main-table-header-item" id="direction" onClick={applySort}>Специальность</th>
                                 <th className="main-table-header-item" id="email" onClick={applySort}>Электронная почта</th>
                                 <th ref={currentSort} className="main-table-header-item" id="admissionYear" onClick={applySort}>Год поступления</th>
                             </tr>
