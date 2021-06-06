@@ -1,9 +1,10 @@
 const User = require('./../models/User')
-const config = require('config')
 const bcrypt = require('bcryptjs')
 const {check, validationResult} = require('express-validator')
 
 const nodemailer = require('nodemailer') 
+
+require('dotenv').config()
 
 module.exports = function (socket, userChangeStream, userId) {
 
@@ -46,13 +47,13 @@ module.exports = function (socket, userChangeStream, userId) {
                 host: 'smtp.gmail.com',
                 service: 'gmail',
                 auth: {
-                    user: config.email,
-                    pass: config.emailPass
+                    user: process.env.email,
+                    pass: process.env.emailPass
                 }
             })
 
             let mailOptions = {
-                from: config.email,
+                from: process.env.email,
                 to: userEmail,
                 subject: 'Пароль',
                 text: `Ваш пароль: ${generatedPassword}`
@@ -81,7 +82,7 @@ module.exports = function (socket, userChangeStream, userId) {
                         admissionYear: change.fullDocument.admissionYear
                     }
 
-                    if (userId == config.get('superuserId') || userId == newUser._id.toString()) {
+                    if (userId == process.env.superuserId || userId == newUser._id.toString()) {
                         socket.emit("newUser", newUser);
                     }
 
@@ -89,7 +90,7 @@ module.exports = function (socket, userChangeStream, userId) {
 
                 case "delete":
 
-                    if (userId == config.get('superuserId')) {
+                    if (userId == process.env.superuserId) {
 
                         socket.emit("deletedUser", change.documentKey._id);
                     }
@@ -112,7 +113,7 @@ module.exports = function (socket, userChangeStream, userId) {
                         admissionYear: response.admissionYear,
                     }
 
-                    if (userId == config.get('superuserId') || userId == updatedUser._id.toString()) {
+                    if (userId == process.env.superuserId || userId == updatedUser._id.toString()) {
                         socket.emit("updatedUser", updatedUser)
                     }
 
@@ -235,7 +236,7 @@ module.exports = function (socket, userChangeStream, userId) {
 
     this.getUser = function () {
 
-        if (userId == config.get('superuserId')) {
+        if (userId == process.env.superuserId) {
 
             socket.on('getUsers', async () => {
                 try {

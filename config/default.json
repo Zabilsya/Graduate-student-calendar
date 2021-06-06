@@ -1,7 +1,7 @@
 {
     "port": 5000,
     "jwtSecret": "hse comrade",
-    "mongoUri": "mongodb+srv://admin:admin@cluster0.k4vof.mongodb.net/myFirstDatabase?retryWrites=true&w=majority",
+    "mongoUri": "mongodb+srv://calendar:fNJ8gm@cluster0.23sjd.mongodb.net/myFirstDatabase?retryWrites=true&w=majority",
     "superuserId": "604fb74012c7d21c984aed35",
     "email": "hsemailsender@gmail.com",
     "emailPass": "P7aufxV56x"

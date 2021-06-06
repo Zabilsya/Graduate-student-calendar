@@ -2,8 +2,8 @@ const moment = require('moment')
 const Event = require('./../models/Event')
 const User = require('./../models/User')
 const Notification = require('./../models/Notification')
-const config = require('config')
 
+require('dotenv').config()
 
 module.exports = function (socket, eventChangeStream, userId) {
 
@@ -44,7 +44,7 @@ module.exports = function (socket, eventChangeStream, userId) {
                     }
                     
 
-                    if ((userId == config.get('superuserId') && newEvent.owner == config.get('superuserId')) || (userId == newEvent.target)) {
+                    if ((userId == process.env.superuserId && newEvent.owner == process.env.superuserId) || (userId == newEvent.target)) {
                         socket.emit("newEvent", newEvent)
 
                     } else if (newEvent.target.length == 'YYYY'.length) {
@@ -64,22 +64,6 @@ module.exports = function (socket, eventChangeStream, userId) {
 
                 case "delete":
                     socket.emit("deletedEvent", eventId)
-
-                    // if (userId == config.get('superuserId') || (userId == deletedEvent.target)) {
-
-                    //     socket.emit("deletedEvent", eventId)
-
-                    // } else if (deletedEvent.target.lenght == 'YYYY'.length) {
-
-                    //     const admissionYear = await User.findOne({
-                    //         "_id": userId
-                    //     }).admissionYear
-
-                    //     if (admissionYear == deletedEvent.target) {
-                    //         socket.emit("deletedEvent", eventId)
-                    //     }
-                    // }
-
                     break;
 
 
@@ -110,7 +94,7 @@ module.exports = function (socket, eventChangeStream, userId) {
                         target: response.target,
                         owner: response.owner
                     }
-                    if ((userId == config.get('superuserId') && response.owner == config.get('superuserId')) || (userId == response.target)) {
+                    if ((userId == process.env.superuserId && response.owner == process.env.superuserId) || (userId == response.target)) {
 
                         socket.emit("updatedEvent", updatedEvent)
 
@@ -304,7 +288,7 @@ module.exports = function (socket, eventChangeStream, userId) {
             let userEvents
             try {
 
-                if (userId != config.get('superuserId')) {
+                if (userId != process.env.superuserId) {
 
                     const user = await User.findOne({
                         "_id": userId
@@ -322,7 +306,7 @@ module.exports = function (socket, eventChangeStream, userId) {
 
                 } else {
                     userEvents = await Event.find({
-                        "owner": config.get('superuserId')
+                        "owner": process.env.superuserId
                     })
                 }
                 socket.emit('getEvents', userEvents)

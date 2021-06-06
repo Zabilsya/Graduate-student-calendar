@@ -2,7 +2,6 @@ const moment = require('moment')
 const Event = require('./../models/Event')
 const User = require('./../models/User')
 const Notification = require('./../models/Notification')
-const config = require('config')
 const {
     all
 } = require('../routes/auth.routes')

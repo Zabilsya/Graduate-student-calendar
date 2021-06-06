@@ -1,6 +1,6 @@
 const moment = require('moment')
 
-const config = require('config')
+require('dotenv').config()
 
 const Event = require('./../models/Event')
 const User = require('./../models/User')
@@ -67,7 +67,7 @@ module.exports = function (socket, notificationChangeStream, userId) {
 
             try {
             
-                if (userId != config.get('superuserId')) {
+                if (userId != process.env.superuserId) {
 
                     const user = await User.findOne({
                         "_id": userId
